@@ -2,99 +2,87 @@
 =========================================
 A.S.I.S.
 Archive Survival Information System
-encyclopedia.js v1.1
+encyclopedia.js v2.0
+
+JSON DATABASE SYSTEM
+ONE FOLDER VERSION
 =========================================
 */
 
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener(
+"DOMContentLoaded",
+()=>{
 
+loadArchive();
 
-    initArchive();
+initSearch();
 
-    initArchiveSearch();
-
-    initArchiveFilters();
+initFilters();
 
 });
 
 
 
+let archive = [];
+
+
+
 /* ========================================= */
-/* БАЗА АРХИВА */
+/* ЗАГРУЗКА БАЗЫ */
 /* ========================================= */
 
 
-const archiveFiles = [
+async function loadArchive(){
 
 
-{
-id:"AS-001",
-name:"Пожиратель",
-type:"Заражённый",
-danger:"CRITICAL",
-status:"АКТИВЕН",
-description:
-"Один из самых опасных заражённых объектов A.S.I.S."
-},
+try{
 
 
-{
-id:"AS-002",
-name:"Красный туман",
-type:"Аномалия",
-danger:"HIGH",
-status:"НАБЛЮДЕНИЕ",
-description:
-"Неизвестная аномальная зона с опасным воздействием."
-},
+const response =
+await fetch("archive.json");
 
 
-{
-id:"AS-003",
-name:"Город Нова",
-type:"Локация",
-danger:"MEDIUM",
-status:"ИССЛЕДУЕТСЯ",
-description:
-"Заброшенный город после глобальной катастрофы."
-},
+
+archive =
+await response.json();
 
 
-{
-id:"AS-004",
-name:"Доктор Морозов",
-type:"NPC",
-danger:"LOW",
-status:"ЖИВОЙ",
-description:
-"Исследователь происхождения вируса."
-},
+
+renderArchive(archive);
 
 
-{
-id:"AS-005",
-name:"Военный Альянс",
-type:"Фракция",
-danger:"MEDIUM",
-status:"АКТИВНА",
-description:
-"Организация выживших военных."
-},
+
+console.log(
+
+"%cA.S.I.S ARCHIVE ONLINE",
+
+"color:#39D98A;font-size:18px;font-weight:bold"
+
+);
 
 
-{
-id:"AS-006",
-name:"Мясник",
-type:"Заражённый",
-danger:"CRITICAL",
-status:"ОПАСЕН",
-description:
-"Крупный мутант с высокой устойчивостью."
+
+}
+
+catch(error){
+
+
+console.error(
+
+"A.S.I.S DATABASE ERROR",
+
+error
+
+);
+
+
 }
 
 
-];
+}
+
+
 
 
 
@@ -103,11 +91,12 @@ description:
 /* ========================================= */
 
 
-function initArchive(){
+function renderArchive(files){
 
 
 const grid =
 document.getElementById("archiveGrid");
+
 
 
 if(!grid) return;
@@ -118,14 +107,14 @@ grid.innerHTML="";
 
 
 
-archiveFiles.forEach(file=>{
+files.forEach(file=>{
 
 
 grid.innerHTML += `
 
 
-<article class="archive-card"
-data-type="${file.type}">
+<article class="archive-card">
+
 
 
 <span class="archive-id">
@@ -160,7 +149,7 @@ ${file.description}
 
 
 
-<div class="status">
+<div class="archive-status">
 
 ${file.status}
 
@@ -170,17 +159,18 @@ ${file.status}
 
 <div class="threat threat-${file.danger.toLowerCase()}">
 
-УРОВЕНЬ:
+ОПАСНОСТЬ:
 ${file.danger}
 
 </div>
 
 
 
-<a 
+<a
+
 href="file.html?id=${file.id}"
-class="button primary"
-style="margin-top:20px">
+
+class="button primary">
 
 
 ОТКРЫТЬ ДОСЬЕ
@@ -205,23 +195,30 @@ style="margin-top:20px">
 
 
 
+
+
 /* ========================================= */
 /* ПОИСК */
 /* ========================================= */
 
 
-function initArchiveSearch(){
+function initSearch(){
 
 
 const input =
 document.getElementById("searchInput");
 
 
+
 if(!input) return;
 
 
 
-input.addEventListener("input",()=>{
+input.addEventListener(
+
+"input",
+
+()=>{
 
 
 const value =
@@ -229,37 +226,47 @@ input.value.toLowerCase();
 
 
 
-document
-.querySelectorAll(".archive-card")
-.forEach(card=>{
+const result =
+archive.filter(file=>{
 
 
-if(card.textContent
+return (
+
+file.name
 .toLowerCase()
-.includes(value)){
+.includes(value)
 
+||
 
-card.style.display="block";
+file.type
+.toLowerCase()
+.includes(value)
 
+||
 
-}
+file.description
+.toLowerCase()
+.includes(value)
 
-else{
-
-
-card.style.display="none";
-
-
-}
-
-
-});
+);
 
 
 });
 
 
+
+renderArchive(result);
+
+
+
 }
+
+);
+
+
+}
+
+
 
 
 
@@ -270,21 +277,27 @@ card.style.display="none";
 /* ========================================= */
 
 
-function initArchiveFilters(){
+function initFilters(){
 
 
 const buttons =
 document.querySelectorAll(".filter");
 
 
-if(!buttons.length) return;
+
+if(!buttons.length)
+return;
 
 
 
 buttons.forEach(button=>{
 
 
-button.addEventListener("click",()=>{
+button.addEventListener(
+
+"click",
+
+()=>{
 
 
 buttons.forEach(btn=>{
@@ -292,6 +305,7 @@ buttons.forEach(btn=>{
 btn.classList.remove("active");
 
 });
+
 
 
 button.classList.add("active");
@@ -303,62 +317,40 @@ button.dataset.type;
 
 
 
-document
-.querySelectorAll(".archive-card")
-.forEach((card,index)=>{
-
-
 if(type==="all"){
 
 
-card.style.display="block";
+renderArchive(archive);
 
 
-}
-
-else{
-
-
-if(archiveFiles[index].type===type){
-
-
-card.style.display="block";
-
-
-}
-
-else{
-
-
-card.style.display="none";
+return;
 
 
 }
 
 
-}
 
+const result =
+archive.filter(file=>{
+
+
+return file.type===type;
 
 
 });
 
 
-});
 
+renderArchive(result);
 
-});
 
 
 }
-
-
-
-
-
-console.log(
-
-"%cA.S.I.S ARCHIVE ONLINE",
-
-"color:#39D98A;font-size:18px;font-weight:bold;"
 
 );
+
+
+});
+
+
+}
