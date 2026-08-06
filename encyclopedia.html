@@ -11,9 +11,6 @@ content="width=device-width, initial-scale=1.0">
 <meta name="theme-color"
 content="#0d1117">
 
-<meta name="description"
-content="A.S.I.S. Encyclopedia — архив объектов, заражённых, аномалий и локаций">
-
 <title>
 A.S.I.S. | Энциклопедия
 </title>
@@ -25,6 +22,7 @@ href="https://fonts.googleapis.com">
 <link rel="preconnect"
 href="https://fonts.gstatic.com"
 crossorigin>
+
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
 rel="stylesheet">
@@ -52,7 +50,6 @@ type="image/svg+xml">
 
 <header class="header">
 
-
 <div class="container">
 
 
@@ -76,6 +73,7 @@ Archive Survival Information System
 
 
 </a>
+
 
 
 
@@ -112,53 +110,20 @@ href="encyclopedia.html">
 
 
 
-<div class="header-right">
-
-
-<div class="search-box">
-
-
-<input
-id="archiveSearch"
-type="text"
-placeholder="Поиск по архиву...">
-
-
 </div>
-
-
-<a href="login.html"
-class="login-button">
-
-Войти
-
-</a>
-
-
-</div>
-
-
-
-<button class="mobile-menu">
-
-☰
-
-</button>
-
-
-</div>
-
 
 </header>
 
 
 
-<!-- ========================= -->
-<!-- MAIN -->
-<!-- ========================= -->
-
 
 <main>
+
+
+
+<!-- ========================= -->
+<!-- HERO -->
+<!-- ========================= -->
 
 
 <section class="encyclopedia-hero">
@@ -174,21 +139,23 @@ A.S.I.S DATABASE
 </span>
 
 
+
 <h1>
 
-ЭНЦИКЛОПЕДИЯ АРХИВА
+Энциклопедия мира
 
 </h1>
 
 
+
 <p>
 
-Центральная база данных A.S.I.S.
-Сведения о заражённых,
-аномалиях, персонажах,
-фракциях и объектах мира.
+Центральный архив информации.
+Объекты, заражённые, аномалии,
+локации, NPC и фракции.
 
 </p>
+
 
 
 </div>
@@ -201,7 +168,7 @@ A.S.I.S DATABASE
 
 
 <!-- ========================= -->
-<!-- SEARCH SYSTEM -->
+<!-- SEARCH -->
 <!-- ========================= -->
 
 
@@ -217,7 +184,7 @@ A.S.I.S DATABASE
 
 <h2>
 
-Система поиска
+Поиск в архиве
 
 </h2>
 
@@ -227,9 +194,14 @@ A.S.I.S DATABASE
 
 
 <input
+
 id="searchInput"
+
 type="text"
-placeholder="Введите название объекта...">
+
+placeholder="Введите название объекта..."
+
+>
 
 
 </div>
@@ -240,7 +212,8 @@ placeholder="Введите название объекта...">
 <div class="archive-filters">
 
 
-<button class="filter active"
+<button 
+class="filter active"
 data-type="all">
 
 Все
@@ -248,7 +221,9 @@ data-type="all">
 </button>
 
 
-<button class="filter"
+
+<button 
+class="filter"
 data-type="Заражённый">
 
 Заражённые
@@ -256,7 +231,9 @@ data-type="Заражённый">
 </button>
 
 
-<button class="filter"
+
+<button 
+class="filter"
 data-type="Аномалия">
 
 Аномалии
@@ -264,7 +241,9 @@ data-type="Аномалия">
 </button>
 
 
-<button class="filter"
+
+<button 
+class="filter"
 data-type="Локация">
 
 Локации
@@ -272,15 +251,19 @@ data-type="Локация">
 </button>
 
 
-<button class="filter"
+
+<button 
+class="filter"
 data-type="NPC">
 
-Персонажи
+NPC
 
 </button>
 
 
-<button class="filter"
+
+<button 
+class="filter"
 data-type="Фракция">
 
 Фракции
@@ -291,8 +274,8 @@ data-type="Фракция">
 </div>
 
 
-</div>
 
+</div>
 
 
 </div>
@@ -304,8 +287,9 @@ data-type="Фракция">
 
 
 
+
 <!-- ========================= -->
-<!-- DATABASE -->
+<!-- ARCHIVE GRID -->
 <!-- ========================= -->
 
 
@@ -316,39 +300,18 @@ data-type="Фракция">
 
 
 
-<div class="section-header">
-
-
-<h2>
+<h2 class="section-title">
 
 Архивные записи
 
 </h2>
 
 
-<span class="section-link">
 
-DATABASE ONLINE
-
-</span>
-
-
-</div>
-
-
-
-
-<div id="archiveGrid"
+<div 
+id="archiveGrid"
 class="archive-grid">
 
-
-
-<!--
-Карточки создаются через JS
--->
-
-
-
 </div>
 
 
@@ -358,89 +321,6 @@ class="archive-grid">
 
 </section>
 
-
-
-
-
-<!-- ========================= -->
-<!-- RANDOM FILE -->
-<!-- ========================= -->
-
-
-<section class="random-file">
-
-
-<div class="container">
-
-
-<div class="random-card">
-
-
-<div class="random-left">
-
-
-<span>
-
-СЛУЧАЙНЫЙ ДОСТУП
-
-</span>
-
-
-<h2 id="randomTitle">
-
-Загрузка файла...
-
-</h2>
-
-
-
-<p id="randomText">
-
-Получение данных из базы A.S.I.S.
-
-</p>
-
-
-
-<a href="#"
-class="button primary"
-id="randomButton">
-
-Открыть файл
-
-</a>
-
-
-</div>
-
-
-
-<div class="random-right">
-
-
-<div class="archive-number">
-
-AS
-
-</div>
-
-
-</div>
-
-
-</div>
-
-
-</div>
-
-
-</section>
-
-
-
-
-
-</main>
 
 
 
@@ -455,7 +335,6 @@ AS
 
 
 <div class="container footer-grid">
-
 
 
 <div>
@@ -485,17 +364,17 @@ Archive Survival Information System
 
 
 
+
 <div>
 
 
 <h3>
-
 Навигация
-
 </h3>
 
 
 <ul>
+
 
 <li>
 <a href="index.html">
@@ -506,7 +385,7 @@ Archive Survival Information System
 
 <li>
 <a href="encyclopedia.html">
-Энциклопедия
+Архив
 </a>
 </li>
 
@@ -518,13 +397,6 @@ Archive Survival Information System
 </li>
 
 
-<li>
-<a href="news.html">
-Новости
-</a>
-</li>
-
-
 </ul>
 
 
@@ -537,32 +409,25 @@ Archive Survival Information System
 
 
 <h3>
-
-Сообщество
-
+Система
 </h3>
 
 
 <ul>
 
 <li>
-<a href="community.html">
-Форум
-</a>
+DATABASE ONLINE
 </li>
-
 
 <li>
-<a href="login.html">
-Войти
-</a>
+ACCESS LEVEL: PUBLIC
 </li>
-
 
 </ul>
 
 
 </div>
+
 
 
 </div>
@@ -571,16 +436,16 @@ Archive Survival Information System
 
 <div class="copyright">
 
-
 © 2026 A.S.I.S.
-Все права защищены.
-
 
 </div>
 
 
 </footer>
 
+
+
+</main>
 
 
 
@@ -591,6 +456,5 @@ Archive Survival Information System
 
 
 </body>
-
 
 </html>
