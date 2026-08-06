@@ -1,1 +1,909 @@
-<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>A.S.I.S.</title><link rel="stylesheet" href="style.css"></head><body><header class="topbar"><div class="logo">A.S.I.S.</div><nav><a href="#">Главная</a> <a href="#">Энциклопедия</a> <a href="#">Карта</a> <a href="#">Новости</a></nav></header><section class="hero"><div class="hero-inner"><h1>АРХИВ ВЫЖИВШИХ</h1><p>Официальная база данных мира игры.</p><a class="btn" href="#">Открыть архив</a></div></section><script src="app.js"></script></body></html>
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<meta name="theme-color"
+content="#0d1117">
+
+<meta
+name="description"
+content="A.S.I.S. — Archive Survival Information System">
+
+<title>
+A.S.I.S. | Архив Выживших
+</title>
+
+<link
+rel="preconnect"
+href="https://fonts.googleapis.com">
+
+<link
+rel="preconnect"
+href="https://fonts.gstatic.com"
+crossorigin>
+
+<link
+href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+rel="stylesheet">
+
+<link
+rel="stylesheet"
+href="style.css">
+
+<link
+rel="icon"
+href="logo.svg"
+type="image/svg+xml">
+
+</head>
+
+<body>
+
+<!-- ========================= -->
+<!-- ЗАГРУЗОЧНЫЙ ЭКРАН -->
+<!-- ========================= -->
+
+<div id="loader">
+
+    <div class="loader-content">
+
+        <img
+        src="logo.svg"
+        alt="A.S.I.S."
+        class="loader-logo">
+
+        <h1>A.S.I.S.</h1>
+
+        <p>
+            Archive Survival Information System
+        </p>
+
+        <div class="loader-progress">
+
+            <div class="loader-bar"></div>
+
+        </div>
+
+        <span>
+            ИНИЦИАЛИЗАЦИЯ АРХИВА...
+        </span>
+
+    </div>
+
+</div>
+
+<!-- ========================= -->
+<!-- HEADER -->
+<!-- ========================= -->
+
+<header class="header">
+
+    <div class="container">
+
+        <a href="index.html"
+           class="logo">
+
+            <img
+            src="logo.svg"
+            alt="A.S.I.S.">
+
+            <div>
+
+                <h2>A.S.I.S.</h2>
+
+                <small>
+                    Archive Survival Information System
+                </small>
+
+            </div>
+
+        </a>
+
+        <nav class="navigation">
+
+            <a class="active"
+               href="index.html">
+               Главная
+            </a>
+
+            <a href="encyclopedia.html">
+                Энциклопедия
+            </a>
+
+            <a href="map.html">
+                Карта
+            </a>
+
+            <a href="news.html">
+                Новости
+            </a>
+
+            <a href="community.html">
+                Сообщество
+            </a>
+
+        </nav>
+
+        <div class="header-right">
+
+            <div class="search-box">
+
+                <input
+                type="text"
+                placeholder="Поиск по архиву...">
+
+            </div>
+
+            <a
+            href="login.html"
+            class="login-button">
+
+                Войти
+
+            </a>
+
+        </div>
+
+        <button
+        class="mobile-menu">
+
+            ☰
+
+        </button>
+
+    </div>
+
+</header>
+
+<!-- ========================= -->
+<!-- HERO -->
+<!-- ========================= -->
+
+<main>
+
+<section class="hero">
+
+    <div class="hero-overlay"></div>
+
+    <div class="container hero-content">
+
+        <span class="hero-tag">
+
+            ОФИЦИАЛЬНЫЙ АРХИВ МИРА
+
+        </span>
+
+        <h1>
+
+            АРХИВ ВЫЖИВШИХ
+
+        </h1>
+
+        <p>
+
+            Добро пожаловать в Archive Survival Information System —
+            крупнейшую базу знаний по миру игры.
+            Исследуйте локации, заражённых, аномалии,
+            фракции, квесты, персонажей и историю
+            погибшего мира.
+
+        </p>
+
+        <div class="hero-buttons">
+
+            <a
+            href="encyclopedia.html"
+            class="button primary">
+
+                Открыть Архив
+
+            </a>
+
+            <a
+            href="map.html"
+            class="button secondary">
+
+                Карта мира
+
+            </a>
+
+        </div>
+
+              <div class="hero-stats">
+
+            <div class="stat-card">
+
+                <h2>286</h2>
+
+                <span>Статей</span>
+
+            </div>
+
+            <div class="stat-card">
+
+                <h2>84</h2>
+
+                <span>Локации</span>
+
+            </div>
+
+            <div class="stat-card">
+
+                <h2>48</h2>
+
+                <span>Заражённые</span>
+
+            </div>
+
+            <div class="stat-card">
+
+                <h2>19</h2>
+
+                <span>Аномалии</span>
+
+            </div>
+
+            <div class="stat-card">
+
+                <h2>12</h2>
+
+                <span>Фракции</span>
+
+            </div>
+
+            <div class="stat-card">
+
+                <h2>82</h2>
+
+                <span>Квесты</span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ========================= -->
+<!-- ОПЕРАТИВНАЯ СВОДКА -->
+<!-- ========================= -->
+
+<section class="briefing">
+
+    <div class="container">
+
+        <div class="briefing-card">
+
+            <div class="briefing-icon">
+
+                ⚠
+
+            </div>
+
+            <div class="briefing-content">
+
+                <span>
+
+                    ОПЕРАТИВНАЯ СВОДКА
+
+                </span>
+
+                <h2>
+
+                    Последнее обновление архива
+
+                </h2>
+
+                <p>
+
+                    Добавлены новые NPC, обновлены сведения
+                    о северном секторе, опубликованы новые
+                    материалы экспедиции и исправлены
+                    устаревшие записи.
+
+                </p>
+
+            </div>
+
+            <a href="news.html"
+               class="button secondary">
+
+                Подробнее
+
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ========================= -->
+<!-- ОСНОВНЫЕ РАЗДЕЛЫ -->
+<!-- ========================= -->
+
+<section class="sections">
+
+<div class="container">
+
+<h2 class="section-title">
+
+Основные разделы
+
+</h2>
+
+<div class="section-grid">
+
+<a
+href="encyclopedia.html"
+class="section-card">
+
+<div class="section-icon">
+
+📖
+
+</div>
+
+<h3>
+
+Энциклопедия
+
+</h3>
+
+<p>
+
+Все статьи, существа, предметы,
+аномалии, персонажи и история мира.
+
+</p>
+
+</a>
+
+<a
+href="map.html"
+class="section-card">
+
+<div class="section-icon">
+
+🗺
+
+</div>
+
+<h3>
+
+Интерактивная карта
+
+</h3>
+
+<p>
+
+Исследуйте все доступные
+локации игрового мира.
+
+</p>
+
+</a>
+
+<a
+href="news.html"
+class="section-card">
+
+<div class="section-icon">
+
+📰
+
+</div>
+
+<h3>
+
+Новости
+
+</h3>
+
+<p>
+
+Следите за обновлениями,
+ивентами и изменениями игры.
+
+</p>
+
+</a>
+
+<a
+href="community.html"
+class="section-card">
+
+<div class="section-icon">
+
+👥
+
+</div>
+
+<h3>
+
+Сообщество
+
+</h3>
+
+<p>
+
+Комментарии,
+обсуждения,
+дневники выживших
+и предложения игроков.
+
+</p>
+
+</a>
+
+</div>
+
+</div>
+
+</section>
+<!-- ========================= -->
+<!-- ПОСЛЕДНИЕ НОВОСТИ -->
+<!-- ========================= -->
+
+<section class="news">
+
+    <div class="container">
+
+        <div class="section-header">
+
+            <h2>Последние новости</h2>
+
+            <a href="news.html" class="section-link">
+                Все новости →
+            </a>
+
+        </div>
+
+        <div class="news-grid">
+
+            <article class="news-card featured">
+
+                <span class="news-date">
+                    08.08.2026
+                </span>
+
+                <h3>
+                    Архив обновлён до версии 1.0
+                </h3>
+
+                <p>
+                    Добавлены новые записи, обновлены данные
+                    о заражённых и открыта база знаний A.S.I.S.
+                </p>
+
+                <a href="news.html">
+                    Читать →
+                </a>
+
+            </article>
+
+            <article class="news-card">
+
+                <span class="news-date">
+                    06.08.2026
+                </span>
+
+                <h3>
+                    Обнаружена новая локация
+                </h3>
+
+                <p>
+                    Разведчики обнаружили неизвестный
+                    промышленный комплекс.
+                </p>
+
+            </article>
+
+            <article class="news-card">
+
+                <span class="news-date">
+                    04.08.2026
+                </span>
+
+                <h3>
+                    Зафиксирована новая аномалия
+                </h3>
+
+                <p>
+                    В северном секторе появилась
+                    неизвестная пространственная зона.
+                </p>
+
+            </article>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ========================= -->
+<!-- ПОПУЛЯРНЫЕ СТАТЬИ -->
+<!-- ========================= -->
+
+<section class="popular">
+
+<div class="container">
+
+<div class="section-header">
+
+<h2>
+
+Популярные статьи
+
+</h2>
+
+<a
+href="encyclopedia.html"
+class="section-link">
+
+Открыть архив →
+
+</a>
+
+</div>
+
+<div class="popular-grid">
+
+<article class="popular-card">
+
+<div class="popular-image"></div>
+
+<div class="popular-content">
+
+<span>
+
+ЗАРАЖЁННЫЙ
+
+</span>
+
+<h3>
+
+Пожиратель
+
+</h3>
+
+<p>
+
+Один из самых опасных
+мутировавших заражённых.
+
+</p>
+
+</div>
+
+</article>
+
+<article class="popular-card">
+
+<div class="popular-image"></div>
+
+<div class="popular-content">
+
+<span>
+
+NPC
+
+</span>
+
+<h3>
+
+Доктор Морозов
+
+</h3>
+
+<p>
+
+Исследователь вируса
+и один из ключевых
+персонажей сюжета.
+
+</p>
+
+</div>
+
+</article>
+
+<article class="popular-card">
+
+<div class="popular-image"></div>
+
+<div class="popular-content">
+
+<span>
+
+АНОМАЛИЯ
+
+</span>
+
+<h3>
+
+Красный туман
+
+</h3>
+
+<p>
+
+Опасная зона,
+вызывающая сильные
+мутации.
+
+</p>
+
+</div>
+
+</article>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- СЛУЧАЙНОЕ ДОСЬЕ -->
+<!-- ========================= -->
+
+<section class="random-file">
+
+<div class="container">
+
+<div class="random-card">
+
+<div class="random-left">
+
+<span>
+
+СЛУЧАЙНОЕ ДОСЬЕ
+
+</span>
+
+<h2>
+
+Объект №043 — «Пожиратель»
+
+</h2>
+
+<p>
+
+Каждый раз при открытии страницы
+будет показываться случайная статья
+из базы данных A.S.I.S.
+
+Позже это будет работать через JavaScript.
+
+</p>
+
+<a
+href="encyclopedia.html"
+class="button primary">
+
+Открыть досье
+
+</a>
+
+</div>
+
+<div class="random-right">
+
+<div class="archive-number">
+
+043
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+  <!-- ========================= -->
+<!-- КАРТА МИРА -->
+<!-- ========================= -->
+
+<section class="world-map">
+
+    <div class="container">
+
+        <div class="section-header">
+
+            <h2>Карта мира</h2>
+
+            <a href="map.html" class="section-link">
+                Открыть карту →
+            </a>
+
+        </div>
+
+        <div class="map-preview">
+
+            <img
+                src="map.webp"
+                alt="Карта игрового мира">
+
+            <div class="map-overlay">
+
+                <h3>
+                    Исследуйте игровой мир
+                </h3>
+
+                <p>
+                    Все регионы, города, базы,
+                    убежища и заражённые территории.
+                </p>
+
+                <a
+                    href="map.html"
+                    class="button primary">
+
+                    Открыть карту
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ========================= -->
+<!-- СТАТИСТИКА -->
+<!-- ========================= -->
+
+<section class="site-stats">
+
+<div class="container">
+
+<div class="stats-grid">
+
+<div class="site-card">
+
+<h2>286</h2>
+
+<span>Статей</span>
+
+</div>
+
+<div class="site-card">
+
+<h2>534</h2>
+
+<span>Комментария</span>
+
+</div>
+
+<div class="site-card">
+
+<h2>124</h2>
+
+<span>Игрока</span>
+
+</div>
+
+<div class="site-card">
+
+<h2>48</h2>
+
+<span>Новостей</span>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- FOOTER -->
+<!-- ========================= -->
+
+<footer class="footer">
+
+<div class="container footer-grid">
+
+<div>
+
+<img
+src="logo.svg"
+alt="A.S.I.S."
+class="footer-logo">
+
+<h2>
+
+A.S.I.S.
+
+</h2>
+
+<p>
+
+Archive Survival Information System
+
+</p>
+
+</div>
+
+<div>
+
+<h3>
+
+Навигация
+
+</h3>
+
+<ul>
+
+<li><a href="index.html">Главная</a></li>
+
+<li><a href="encyclopedia.html">Энциклопедия</a></li>
+
+<li><a href="map.html">Карта</a></li>
+
+<li><a href="news.html">Новости</a></li>
+
+</ul>
+
+</div>
+
+<div>
+
+<h3>
+
+Сообщество
+
+</h3>
+
+<ul>
+
+<li><a href="community.html">Комментарии</a></li>
+
+<li><a href="login.html">Войти</a></li>
+
+<li><a href="#">Discord</a></li>
+
+<li><a href="#">VK</a></li>
+
+</ul>
+
+</div>
+
+</div>
+
+<div class="copyright">
+
+<p>
+
+© 2026 A.S.I.S.
+
+Все права защищены.
+
+</p>
+
+</div>
+
+</footer>
+
+</main>
+
+<script src="app.js"></script>
+
+</body>
+
+  </html>
