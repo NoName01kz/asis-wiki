@@ -2,7 +2,7 @@
 =========================================
 A.S.I.S.
 Archive Survival Information System
-encyclopedia.js v1.0
+encyclopedia.js v1.1
 =========================================
 */
 
@@ -16,16 +16,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     initArchiveFilters();
 
-    initRandomArchive();
-
-
-
 });
 
 
 
 /* ========================================= */
-/* БАЗА ДАННЫХ */
+/* БАЗА АРХИВА */
 /* ========================================= */
 
 
@@ -33,115 +29,68 @@ const archiveFiles = [
 
 
 {
-
 id:"AS-001",
-
 name:"Пожиратель",
-
 type:"Заражённый",
-
 danger:"CRITICAL",
-
 status:"АКТИВЕН",
-
 description:
-"Высокоопасный мутировавший организм. Обладает огромной силой и агрессивным поведением."
-
+"Один из самых опасных заражённых объектов A.S.I.S."
 },
 
 
-
 {
-
 id:"AS-002",
-
 name:"Красный туман",
-
 type:"Аномалия",
-
 danger:"HIGH",
-
 status:"НАБЛЮДЕНИЕ",
-
 description:
-"Неизвестная аномальная зона. Воздействует на организм и вызывает мутации."
-
+"Неизвестная аномальная зона с опасным воздействием."
 },
 
 
-
 {
-
 id:"AS-003",
-
 name:"Город Нова",
-
 type:"Локация",
-
 danger:"MEDIUM",
-
-status:"ЧАСТИЧНО ИССЛЕДОВАН",
-
+status:"ИССЛЕДУЕТСЯ",
 description:
-"Заброшенный мегаполис. Один из крупнейших центров заражения."
-
+"Заброшенный город после глобальной катастрофы."
 },
 
 
-
 {
-
 id:"AS-004",
-
 name:"Доктор Морозов",
-
 type:"NPC",
-
 danger:"LOW",
-
 status:"ЖИВОЙ",
-
 description:
-"Учёный, занимающийся исследованием происхождения вируса."
-
+"Исследователь происхождения вируса."
 },
 
 
-
 {
-
 id:"AS-005",
-
 name:"Военный Альянс",
-
 type:"Фракция",
-
 danger:"MEDIUM",
-
 status:"АКТИВНА",
-
 description:
-"Организация выживших военных, контролирующая несколько укреплённых баз."
-
+"Организация выживших военных."
 },
 
 
-
 {
-
 id:"AS-006",
-
 name:"Мясник",
-
 type:"Заражённый",
-
 danger:"CRITICAL",
-
 status:"ОПАСЕН",
-
 description:
-"Огромный мутант с повышенной выносливостью."
-
+"Крупный мутант с высокой устойчивостью."
 }
 
 
@@ -175,7 +124,8 @@ archiveFiles.forEach(file=>{
 grid.innerHTML += `
 
 
-<article class="archive-card">
+<article class="archive-card"
+data-type="${file.type}">
 
 
 <span class="archive-id">
@@ -183,6 +133,7 @@ grid.innerHTML += `
 ${file.id}
 
 </span>
+
 
 
 <span class="archive-type">
@@ -216,12 +167,26 @@ ${file.status}
 </div>
 
 
+
 <div class="threat threat-${file.danger.toLowerCase()}">
 
 УРОВЕНЬ:
 ${file.danger}
 
 </div>
+
+
+
+<a 
+href="file.html?id=${file.id}"
+class="button primary"
+style="margin-top:20px">
+
+
+ОТКРЫТЬ ДОСЬЕ
+
+
+</a>
 
 
 
@@ -238,6 +203,8 @@ ${file.danger}
 
 
 
+
+
 /* ========================================= */
 /* ПОИСК */
 /* ========================================= */
@@ -248,6 +215,7 @@ function initArchiveSearch(){
 
 const input =
 document.getElementById("searchInput");
+
 
 if(!input) return;
 
@@ -261,12 +229,9 @@ input.value.toLowerCase();
 
 
 
-const cards =
-document.querySelectorAll(".archive-card");
-
-
-
-cards.forEach(card=>{
+document
+.querySelectorAll(".archive-card")
+.forEach(card=>{
 
 
 if(card.textContent
@@ -288,12 +253,10 @@ card.style.display="none";
 }
 
 
-
 });
 
 
 });
-
 
 
 }
@@ -324,12 +287,11 @@ buttons.forEach(button=>{
 button.addEventListener("click",()=>{
 
 
-buttons.forEach(btn=>
+buttons.forEach(btn=>{
 
-btn.classList.remove("active")
+btn.classList.remove("active");
 
-);
-
+});
 
 
 button.classList.add("active");
@@ -341,12 +303,9 @@ button.dataset.type;
 
 
 
-const cards =
-document.querySelectorAll(".archive-card");
-
-
-
-cards.forEach((card,index)=>{
+document
+.querySelectorAll(".archive-card")
+.forEach((card,index)=>{
 
 
 if(type==="all"){
@@ -387,7 +346,6 @@ card.style.display="none";
 });
 
 
-
 });
 
 
@@ -395,59 +353,12 @@ card.style.display="none";
 
 
 
-/* ========================================= */
-/* СЛУЧАЙНОЕ ДОСЬЕ */
-/* ========================================= */
-
-
-function initRandomArchive(){
-
-
-const title =
-document.getElementById("randomTitle");
-
-
-const text =
-document.getElementById("randomText");
-
-
-
-if(!title || !text) return;
-
-
-
-const file =
-archiveFiles[
-Math.floor(
-Math.random()*archiveFiles.length
-)
-];
-
-
-
-title.textContent =
-file.id+" — "+file.name;
-
-
-
-text.textContent =
-file.description;
-
-
-
-}
-
-
-
-/* ========================================= */
-/* DATABASE ONLINE */
-/* ========================================= */
 
 
 console.log(
 
-"%cA.S.I.S DATABASE ONLINE",
+"%cA.S.I.S ARCHIVE ONLINE",
 
-"color:#39D98A;font-size:16px;font-weight:bold;"
+"color:#39D98A;font-size:18px;font-weight:bold;"
 
 );
