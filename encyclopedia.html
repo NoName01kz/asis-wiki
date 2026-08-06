@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<meta name="theme-color"
+content="#0d1117">
+
+<meta name="description"
+content="A.S.I.S. Encyclopedia — архив объектов, заражённых, аномалий и локаций">
+
+<title>
+A.S.I.S. | Энциклопедия
+</title>
+
+
+<link rel="preconnect"
+href="https://fonts.googleapis.com">
+
+<link rel="preconnect"
+href="https://fonts.gstatic.com"
+crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+rel="stylesheet">
+
+
+<link rel="stylesheet"
+href="style.css">
+
+
+<link rel="icon"
+href="logo.svg"
+type="image/svg+xml">
+
+
+</head>
+
+
+<body>
+
+
+<!-- ========================= -->
+<!-- HEADER -->
+<!-- ========================= -->
+
+
+<header class="header">
+
+
+<div class="container">
+
+
+<a href="index.html"
+class="logo">
+
+
+<img src="logo.svg"
+alt="A.S.I.S.">
+
+
+<div>
+
+<h2>A.S.I.S.</h2>
+
+<small>
+Archive Survival Information System
+</small>
+
+</div>
+
+
+</a>
+
+
+
+<nav class="navigation">
+
+
+<a href="index.html">
+Главная
+</a>
+
+
+<a class="active"
+href="encyclopedia.html">
+Энциклопедия
+</a>
+
+
+<a href="map.html">
+Карта
+</a>
+
+
+<a href="news.html">
+Новости
+</a>
+
+
+<a href="community.html">
+Сообщество
+</a>
+
+
+</nav>
+
+
+
+<div class="header-right">
+
+
+<div class="search-box">
+
+
+<input
+id="archiveSearch"
+type="text"
+placeholder="Поиск по архиву...">
+
+
+</div>
+
+
+<a href="login.html"
+class="login-button">
+
+Войти
+
+</a>
+
+
+</div>
+
+
+
+<button class="mobile-menu">
+
+☰
+
+</button>
+
+
+</div>
+
+
+</header>
+
+
+
+<!-- ========================= -->
+<!-- MAIN -->
+<!-- ========================= -->
+
+
+<main>
+
+
+<section class="encyclopedia-hero">
+
+
+<div class="container">
+
+
+<span class="hero-tag">
+
+A.S.I.S DATABASE
+
+</span>
+
+
+<h1>
+
+ЭНЦИКЛОПЕДИЯ АРХИВА
+
+</h1>
+
+
+<p>
+
+Центральная база данных A.S.I.S.
+Сведения о заражённых,
+аномалиях, персонажах,
+фракциях и объектах мира.
+
+</p>
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+<!-- ========================= -->
+<!-- SEARCH SYSTEM -->
+<!-- ========================= -->
+
+
+<section class="archive-control">
+
+
+<div class="container">
+
+
+
+<div class="archive-panel glass">
+
+
+<h2>
+
+Система поиска
+
+</h2>
+
+
+
+<div class="archive-search">
+
+
+<input
+id="searchInput"
+type="text"
+placeholder="Введите название объекта...">
+
+
+</div>
+
+
+
+
+<div class="archive-filters">
+
+
+<button class="filter active"
+data-type="all">
+
+Все
+
+</button>
+
+
+<button class="filter"
+data-type="Заражённый">
+
+Заражённые
+
+</button>
+
+
+<button class="filter"
+data-type="Аномалия">
+
+Аномалии
+
+</button>
+
+
+<button class="filter"
+data-type="Локация">
+
+Локации
+
+</button>
+
+
+<button class="filter"
+data-type="NPC">
+
+Персонажи
+
+</button>
+
+
+<button class="filter"
+data-type="Фракция">
+
+Фракции
+
+</button>
+
+
+</div>
+
+
+</div>
+
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+<!-- ========================= -->
+<!-- DATABASE -->
+<!-- ========================= -->
+
+
+<section class="database">
+
+
+<div class="container">
+
+
+
+<div class="section-header">
+
+
+<h2>
+
+Архивные записи
+
+</h2>
+
+
+<span class="section-link">
+
+DATABASE ONLINE
+
+</span>
+
+
+</div>
+
+
+
+
+<div id="archiveGrid"
+class="archive-grid">
+
+
+
+<!--
+Карточки создаются через JS
+-->
+
+
+
+</div>
+
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+<!-- ========================= -->
+<!-- RANDOM FILE -->
+<!-- ========================= -->
+
+
+<section class="random-file">
+
+
+<div class="container">
+
+
+<div class="random-card">
+
+
+<div class="random-left">
+
+
+<span>
+
+СЛУЧАЙНЫЙ ДОСТУП
+
+</span>
+
+
+<h2 id="randomTitle">
+
+Загрузка файла...
+
+</h2>
+
+
+
+<p id="randomText">
+
+Получение данных из базы A.S.I.S.
+
+</p>
+
+
+
+<a href="#"
+class="button primary"
+id="randomButton">
+
+Открыть файл
+
+</a>
+
+
+</div>
+
+
+
+<div class="random-right">
+
+
+<div class="archive-number">
+
+AS
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+</main>
+
+
+
+
+
+<!-- ========================= -->
+<!-- FOOTER -->
+<!-- ========================= -->
+
+
+<footer class="footer">
+
+
+<div class="container footer-grid">
+
+
+
+<div>
+
+
+<img
+src="logo.svg"
+class="footer-logo"
+alt="A.S.I.S.">
+
+
+<h2>
+
+A.S.I.S.
+
+</h2>
+
+
+<p>
+
+Archive Survival Information System
+
+</p>
+
+
+</div>
+
+
+
+<div>
+
+
+<h3>
+
+Навигация
+
+</h3>
+
+
+<ul>
+
+<li>
+<a href="index.html">
+Главная
+</a>
+</li>
+
+
+<li>
+<a href="encyclopedia.html">
+Энциклопедия
+</a>
+</li>
+
+
+<li>
+<a href="map.html">
+Карта
+</a>
+</li>
+
+
+<li>
+<a href="news.html">
+Новости
+</a>
+</li>
+
+
+</ul>
+
+
+</div>
+
+
+
+
+<div>
+
+
+<h3>
+
+Сообщество
+
+</h3>
+
+
+<ul>
+
+<li>
+<a href="community.html">
+Форум
+</a>
+</li>
+
+
+<li>
+<a href="login.html">
+Войти
+</a>
+</li>
+
+
+</ul>
+
+
+</div>
+
+
+</div>
+
+
+
+<div class="copyright">
+
+
+© 2026 A.S.I.S.
+Все права защищены.
+
+
+</div>
+
+
+</footer>
+
+
+
+
+
+<script src="app.js"></script>
+
+<script src="encyclopedia.js"></script>
+
+
+</body>
+
+
+</html>
