@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="description"
+        content="Просмотр новости A.S.I.S. — Archive Survival Information System">
+
+    <title>
+        Новость — A.S.I.S.
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="style.css">
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     LOADER
+===================================================== -->
+
+<div class="loader">
+
+    <div class="loader-content">
+
+        <img
+            src="logo.svg"
+            alt="A.S.I.S."
+            class="loader-logo">
+
+        <h1>
+            A.S.I.S.
+        </h1>
+
+        <p>
+            Archive Survival Information System
+        </p>
+
+        <div class="loader-progress">
+
+            <div class="loader-bar"></div>
+
+        </div>
+
+        <span>
+            ЗАГРУЗКА НОВОСТИ...
+        </span>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
+<header class="header">
+
+    <div class="container">
+
+
+        <a
+            href="index.html"
+            class="logo">
+
+            <img
+                src="logo.svg"
+                alt="A.S.I.S.">
+
+            <div>
+
+                <h2>
+                    A.S.I.S.
+                </h2>
+
+                <small>
+                    Archive Survival Information System
+                </small>
+
+            </div>
+
+        </a>
+
+
+        <nav class="navigation">
+
+            <a href="index.html">
+                Главная
+            </a>
+
+            <a href="encyclopedia.html">
+                Энциклопедия
+            </a>
+
+            <a href="map.html">
+                Карта
+            </a>
+
+            <a
+                href="news.html"
+                class="active">
+
+                Новости
+
+            </a>
+
+            <a href="community.html">
+                Сообщество
+            </a>
+
+        </nav>
+
+
+        <div class="header-right">
+
+            <div class="search-box">
+
+                <input
+                    id="newsViewSearch"
+                    type="text"
+                    placeholder="Поиск новостей...">
+
+            </div>
+
+
+            <a
+                href="login.html"
+                class="login-button">
+
+                Войти
+
+            </a>
+
+        </div>
+
+
+        <button
+            class="mobile-menu"
+            type="button"
+            aria-label="Открыть меню">
+
+            ☰
+
+        </button>
+
+
+    </div>
+
+</header>
+
+
+<!-- =====================================================
+     NEWS VIEW
+===================================================== -->
+
+<main>
+
+
+    <section class="page-hero">
+
+        <div class="container">
+
+            <span
+                id="newsCategory"
+                class="hero-tag">
+
+                НОВОСТИ A.S.I.S.
+
+            </span>
+
+
+            <h1 id="newsTitle">
+
+                Загрузка...
+
+            </h1>
+
+
+            <p id="newsDescription">
+
+                Загрузка новости из архива...
+
+            </p>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         NEWS ARTICLE
+    ================================================= -->
+
+    <section class="section">
+
+        <div class="container">
+
+
+            <div
+                id="newsView"
+                class="news-view">
+
+
+                <!-- IMAGE -->
+
+                <div
+                    id="newsImageWrapper"
+                    class="news-view-image">
+
+
+                    <img
+                        id="newsImage"
+                        src=""
+                        alt="">
+
+
+                </div>
+
+
+
+                <!-- META -->
+
+                <div class="news-view-meta">
+
+
+                    <span
+                        id="newsDate"
+                        class="news-date">
+
+                        --
+
+                    </span>
+
+
+                    <span
+                        id="newsStatus"
+                        class="news-status">
+
+                        --
+
+                    </span>
+
+
+                    <span
+                        id="newsCategoryMeta"
+                        class="news-category">
+
+                        --
+
+                    </span>
+
+
+                </div>
+
+
+
+                <!-- CONTENT -->
+
+                <article
+                    id="newsContent"
+                    class="news-view-content">
+
+                    <p>
+                        Загрузка содержимого новости...
+                    </p>
+
+                </article>
+
+
+
+                <!-- BACK -->
+
+                <div class="news-view-actions">
+
+                    <a
+                        href="news.html"
+                        class="button secondary">
+
+                        ← Вернуться к новостям
+
+                    </a>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- =================================================
+                 ERROR
+            ================================================= -->
+
+            <div
+                id="newsError"
+                class="archive-panel glass"
+                style="display:none; text-align:center;">
+
+
+                <div class="archive-error-code">
+
+                    NEWS ERROR
+
+                </div>
+
+
+                <h2 id="newsErrorTitle">
+
+                    Новость не найдена
+
+                </h2>
+
+
+                <p
+                    id="newsErrorText"
+                    style="
+                        color:var(--text-light);
+                        margin-top:15px;
+                        line-height:1.8;
+                    ">
+
+                    Запрошенная новость отсутствует
+                    в базе данных A.S.I.S.
+
+                </p>
+
+
+                <div
+                    style="
+                        margin-top:25px;">
+
+                    <a
+                        href="news.html"
+                        class="button primary">
+
+                        Вернуться к новостям
+
+                    </a>
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer class="footer">
+
+    <div class="container">
+
+
+        <div class="footer-grid">
+
+
+            <div>
+
+                <img
+                    src="logo.svg"
+                    alt="A.S.I.S."
+                    class="footer-logo">
+
+
+                <h2>
+                    A.S.I.S.
+                </h2>
+
+
+                <p>
+                    Archive Survival Information System
+                </p>
+
+
+                <p
+                    style="margin-top:15px;">
+
+                    Архив выживших.
+                    Система хранения и распространения
+                    информации о мире после катастрофы.
+
+                </p>
+
+            </div>
+
+
+
+            <div>
+
+                <h3>
+                    Навигация
+                </h3>
+
+                <ul>
+
+                    <li>
+                        <a href="index.html">
+                            Главная
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="encyclopedia.html">
+                            Энциклопедия
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="map.html">
+                            Карта
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="news.html">
+                            Новости
+                        </a>
+                    </li>
+
+                </ul>
+
+            </div>
+
+
+
+            <div>
+
+                <h3>
+                    Сообщество
+                </h3>
+
+                <ul>
+
+                    <li>
+                        <a href="community.html">
+                            Сообщество
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="login.html">
+                            Войти
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#">
+                            Предложить материал
+                        </a>
+                    </li>
+
+                </ul>
+
+            </div>
+
+
+        </div>
+
+
+        <div class="copyright">
+
+            © 2026 A.S.I.S.
+            Все права защищены.
+
+        </div>
+
+
+    </div>
+
+</footer>
+
+
+<script src="news-view.js"></script>
+
+</body>
+
+</html>
