@@ -790,136 +790,63 @@ function renderNews() {
 
 function createNewsCard(news) {
 
-    const id =
-        escapeHTML(
-            news.id ||
-            ""
-        );
-
-
-    const title =
-        escapeHTML(
-            news.title ||
-            "Без названия"
-        );
-
-
-    const date =
-        escapeHTML(
-            news.date ||
-            ""
-        );
-
-
-    const category =
-        escapeHTML(
-            news.category ||
-            "Новости"
-        );
-
-
-    const description =
-        escapeHTML(
-            news.description ||
-            "Описание отсутствует."
-        );
-
-
-    const image =
-        escapeCSSUrl(
-            news.image ||
-            "news.webp"
-        );
-
-
-    const status =
-        escapeHTML(
-            news.status ||
-            "ОПУБЛИКОВАНО"
-        );
-
+    const id = news.id || "";
+    const title = news.title || "Без названия";
+    const date = news.date || "";
+    const category = news.category || "Новости";
+    const image = news.image || "placeholder.webp";
+    const description = news.description || "";
 
     return `
-
-        <article
-            class="archive-card news-card"
-            data-id="${id}"
-            data-category="${category}"
-        >
-
-            <div
-                class="popular-image"
-                style="
-                    background:
-                    linear-gradient(
-                        rgba(57,217,138,.08),
-                        rgba(0,0,0,.35)
-                    ),
-                    url('${image}');
-                    background-size:cover;
-                    background-position:center;
-                "
-            >
-            </div>
-
-
-            <div
-                class="archive-id"
-                style="margin-top:20px;"
-            >
-                ${id}
-            </div>
-
-
-            <span class="archive-type">
-                ${category}
-            </span>
-
-
-            <div
-                class="news-date"
-                style="margin-top:5px;"
-            >
-                ${date}
-            </div>
-
-
-            <h3>
-                ${title}
-            </h3>
-
-
-            <p>
-                ${description}
-            </p>
-
-
-            <div
-                style="
-                    color:var(--text-light);
-                    font-size:12px;
-                    margin-bottom:18px;
-                "
-            >
-                ${status}
-            </div>
-
+        <article class="news-card">
 
             <a
-                href="news-article.html?id=${encodeURIComponent(
-                    news.id
-                )}"
-                class="section-link"
+                href="news-view.html?id=${encodeURIComponent(id)}"
+                class="news-card-link"
+                aria-label="Открыть новость ${escapeHTML(title)}"
             >
-                Читать →
+
+                <div
+                    class="news-card-image"
+                    style="
+                        background-image:
+                        linear-gradient(
+                            rgba(0,0,0,.15),
+                            rgba(0,0,0,.45)
+                        ),
+                        url('${escapeHTML(image)}');
+                    "
+                ></div>
+
+                <div class="news-card-content">
+
+                    <span class="news-date">
+                        ${escapeHTML(date)}
+                    </span>
+
+                    <span class="news-category">
+                        ${escapeHTML(category)}
+                    </span>
+
+                    <h3>
+                        ${escapeHTML(title)}
+                    </h3>
+
+                    <p>
+                        ${escapeHTML(description)}
+                    </p>
+
+                    <span class="news-read">
+                        Читать новость →
+                    </span>
+
+                </div>
+
             </a>
 
         </article>
-
     `;
-
 }
-
 
 /* =====================================================
    СТАТИСТИКА
