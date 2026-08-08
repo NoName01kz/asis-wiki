@@ -860,7 +860,7 @@ function updateStatistics() {
 
     const updates =
         countCategory(
-            "Обновления"
+            "Обновление"
         );
 
 
@@ -951,7 +951,7 @@ function updateStatistics() {
 
                     case "updates":
                     case "update":
-                    case "Обновления":
+                    case "Обновление":
 
                         value =
                             updates;
