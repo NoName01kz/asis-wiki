@@ -1,10 +1,11 @@
 /*
-=========================================
+=========================================================
 A.S.I.S.
 Archive Survival Information System
-app.js v1.0
-=========================================
+app.js v2.0
+=========================================================
 */
+
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -15,12 +16,12 @@ document.addEventListener("DOMContentLoaded", () => {
     initCounters();
 
     initRandomFile();
-    
-initPopularArticles();
+
+    initPopularArticles();
+
     initHeader();
 
 });
-
 
 
 /* ========================================= */
@@ -29,15 +30,18 @@ initPopularArticles();
 
 function initLoader() {
 
-    const loader = document.getElementById("loader");
+    const loader =
+        document.getElementById("loader");
 
     if (!loader) return;
+
 
     setTimeout(() => {
 
         loader.style.opacity = "0";
 
         loader.style.pointerEvents = "none";
+
 
         setTimeout(() => {
 
@@ -50,14 +54,17 @@ function initLoader() {
 }
 
 
-
 /* ========================================= */
 /* HEADER */
 /* ========================================= */
 
 function initHeader() {
 
-    const header = document.querySelector(".header");
+    const header =
+        document.querySelector(".header");
+
+    if (!header) return;
+
 
     window.addEventListener("scroll", () => {
 
@@ -76,18 +83,24 @@ function initHeader() {
 }
 
 
-
 /* ========================================= */
 /* ПЛАВНАЯ ПРОКРУТКА */
 /* ========================================= */
 
-document.querySelectorAll("a[href^='#']").forEach(link => {
+document.querySelectorAll(
+    "a[href^='#']"
+).forEach(link => {
 
     link.addEventListener("click", e => {
 
         e.preventDefault();
 
-        const target = document.querySelector(link.getAttribute("href"));
+
+        const target =
+            document.querySelector(
+                link.getAttribute("href")
+            );
+
 
         if (target) {
 
@@ -102,43 +115,70 @@ document.querySelectorAll("a[href^='#']").forEach(link => {
     });
 
 });
+
+
 /* ========================================= */
 /* АНИМАЦИЯ ПОЯВЛЕНИЯ БЛОКОВ */
 /* ========================================= */
 
 function initScrollAnimation() {
 
-    const elements = document.querySelectorAll(
+    const elements =
+        document.querySelectorAll(
 
-        ".stat-card," +
-        ".section-card," +
-        ".news-card," +
-        ".popular-card," +
-        ".random-card," +
-        ".site-card," +
-        ".briefing-card"
+            ".stat-card," +
+            ".section-card," +
+            ".news-card," +
+            ".popular-card," +
+            ".random-card," +
+            ".site-card," +
+            ".briefing-card"
 
-    );
+        );
 
-    const observer = new IntersectionObserver((entries) => {
 
-        entries.forEach(entry => {
+    if (!("IntersectionObserver" in window)) {
 
-            if (entry.isIntersecting) {
+        elements.forEach(element => {
 
-                entry.target.classList.add("show");
-
-                observer.unobserve(entry.target);
-
-            }
+            element.classList.add("show");
 
         });
 
-    }, {
+        return;
 
-        threshold: 0.15
+    }
 
-    });
+
+    const observer =
+        new IntersectionObserver(
+
+            entries => {
+
+                entries.forEach(entry => {
+
+                    if (entry.isIntersecting) {
+
+                        entry.target.classList.add(
+                            "show"
+                        );
+
+                        observer.unobserve(
+                            entry.target
+                        );
+
+                    }
+
+                });
+
+            },
+
+            {
+                threshold: 0.15
+            }
+
+        );
+
 
     elements.forEach(element => {
 
@@ -150,50 +190,65 @@ function initScrollAnimation() {
 
 }
 
+
 /* ========================================= */
 /* АНИМИРОВАННЫЕ СЧЁТЧИКИ */
 /* ========================================= */
 
 function initCounters() {
 
-    const counters = document.querySelectorAll(
+    const counters =
+        document.querySelectorAll(
+            ".stat-card h2, .site-card h2"
+        );
 
-        ".stat-card h2, .site-card h2"
-
-    );
 
     counters.forEach(counter => {
 
-        const target = parseInt(counter.textContent);
+        const target =
+            parseInt(
+                counter.textContent,
+                10
+            );
+
 
         if (isNaN(target)) return;
 
+
         let current = 0;
 
-        const step = Math.max(1, Math.ceil(target / 80));
 
-        const timer = setInterval(() => {
+        const step =
+            Math.max(
+                1,
+                Math.ceil(target / 80)
+            );
 
-            current += step;
 
-            if (current >= target) {
+        const timer =
+            setInterval(() => {
 
-                current = target;
+                current += step;
 
-                clearInterval(timer);
 
-            }
+                if (current >= target) {
 
-            counter.textContent = current;
+                    current = target;
 
-        }, 20);
+                    clearInterval(timer);
+
+                }
+
+
+                counter.textContent =
+                    current;
+
+            }, 20);
 
     });
 
 }
-/* ========================================= */
-/* СЛУЧАЙНОЕ ДОСЬЕ */
-/* ========================================= */
+
 
 /* ========================================= */
 /* СЛУЧАЙНОЕ ДОСЬЕ */
@@ -202,16 +257,27 @@ function initCounters() {
 async function initRandomFile() {
 
     const title =
-        document.querySelector(".random-left h2");
+        document.querySelector(
+            ".random-left h2"
+        );
+
 
     const text =
-        document.querySelector(".random-left p");
+        document.querySelector(
+            ".random-left p"
+        );
+
 
     const button =
-        document.querySelector(".random-left .button");
+        document.querySelector(
+            ".random-left .button"
+        );
+
 
     const archiveNumber =
-        document.querySelector(".random-card .archive-number");
+        document.querySelector(
+            ".random-card .archive-number"
+        );
 
 
     if (!title || !text) return;
@@ -220,15 +286,18 @@ async function initRandomFile() {
     try {
 
         const response =
-            await fetch("archive.json", {
-                cache: "no-store"
-            });
+            await fetch(
+                "archive.json",
+                {
+                    cache: "no-store"
+                }
+            );
 
 
         if (!response.ok) {
 
             throw new Error(
-                "Не удалось загрузить archive.json"
+                `archive.json HTTP ${response.status}`
             );
 
         }
@@ -244,44 +313,29 @@ async function initRandomFile() {
         ) {
 
             throw new Error(
-                "Архив пуст"
+                "Архив пуст или имеет неверный формат."
             );
 
         }
 
 
-        /* -----------------------------------------
-           ВЫБИРАЕМ СЛУЧАЙНУЮ ЗАПИСЬ
-        ----------------------------------------- */
-
         const random =
             archive[
                 Math.floor(
-                    Math.random() * archive.length
+                    Math.random() *
+                    archive.length
                 )
             ];
 
 
-        /* -----------------------------------------
-           НАЗВАНИЕ
-        ----------------------------------------- */
-
         title.textContent =
-            `Объект ${random.id} — «${random.name}»`;
+            `Объект ${random.id} — «${random.name || "Без названия"}»`;
 
-
-        /* -----------------------------------------
-           ОПИСАНИЕ
-        ----------------------------------------- */
 
         text.textContent =
             random.description ||
             "Описание объекта отсутствует.";
 
-
-        /* -----------------------------------------
-           НОМЕР ДОСЬЕ
-        ----------------------------------------- */
 
         if (archiveNumber) {
 
@@ -289,15 +343,12 @@ async function initRandomFile() {
                 String(random.id || "")
                     .replace(/^AS-/i, "");
 
+
             archiveNumber.textContent =
                 number.padStart(3, "0");
 
         }
 
-
-        /* -----------------------------------------
-           КНОПКА
-        ----------------------------------------- */
 
         if (button) {
 
@@ -326,201 +377,10 @@ async function initRandomFile() {
             error
         );
 
-        /*
-        Если archive.json недоступен,
-        существующее содержимое HTML
-        останется на месте.
-        */
-
     }
 
 }
-/* ========================================= */
-/* МОБИЛЬНОЕ МЕНЮ */
-/* ========================================= */
 
-function initMobileMenu() {
-
-    const button = document.querySelector(".mobile-menu");
-    const navigation = document.querySelector(".navigation");
-
-    if (!button || !navigation) return;
-
-    button.addEventListener("click", () => {
-
-        navigation.classList.toggle("mobile-open");
-
-        button.classList.toggle("opened");
-
-    });
-
-}
-
-initMobileMenu();
-
-/* ========================================= */
-/* ПОИСК (ЗАГОТОВКА) */
-/* ========================================= */
-
-function initSearch() {
-
-    const input = document.querySelector(".search-box input");
-
-    if (!input) return;
-
-    input.addEventListener("input", function () {
-
-        console.log("Поиск:", this.value);
-
-        /*
-        Позже здесь будет поиск
-        по Firebase или JSON базе статей.
-        */
-
-    });
-
-}
-
-initSearch();
-
-/* ========================================= */
-/* ЭФФЕКТ СВЕЧЕНИЯ КАРТОЧЕК */
-/* ========================================= */
-
-const cards = document.querySelectorAll(
-
-    ".section-card, .news-card, .popular-card, .site-card"
-
-);
-
-cards.forEach(card => {
-
-    card.addEventListener("mousemove", e => {
-
-        const rect = card.getBoundingClientRect();
-
-        const x = e.clientX - rect.left;
-
-        const y = e.clientY - rect.top;
-
-        card.style.background = `radial-gradient(circle at ${x}px ${y}px,
-        rgba(57,217,138,.12),
-        rgba(28,33,40,1) 70%)`;
-
-    });
-
-    card.addEventListener("mouseleave", () => {
-
-        card.style.background = "";
-
-    });
-
-});
-
-
-/* ========================================= */
-/* КНОПКА "НАВЕРХ" */
-/* ========================================= */
-
-const topButton = document.createElement("button");
-
-topButton.innerHTML = "↑";
-
-topButton.className = "scroll-top";
-
-document.body.appendChild(topButton);
-
-window.addEventListener("scroll", () => {
-
-    if (window.scrollY > 500) {
-
-        topButton.classList.add("visible");
-
-    } else {
-
-        topButton.classList.remove("visible");
-
-    }
-
-});
-
-topButton.addEventListener("click", () => {
-
-    window.scrollTo({
-
-        top: 0,
-
-        behavior: "smooth"
-
-    });
-
-});
-
-
-/* ========================================= */
-/* ПРИВЕТСТВИЕ */
-/* ========================================= */
-
-console.log(
-
-"%cA.S.I.S. v1.0",
-
-"color:#39D98A;font-size:20px;font-weight:bold;"
-
-);
-
-console.log(
-
-"Archive Survival Information System"
-
-);
-
-
-/* ========================================= */
-/* ПОДГОТОВКА FIREBASE */
-/* ========================================= */
-
-const ASIS = {
-
-    version: "1.0",
-
-    firebase: false,
-
-    user: null
-
-};
-
-
-/*
-========================================================
-
-Позже здесь подключатся:
-
-✓ Firebase Authentication
-
-✓ Firebase Firestore
-
-✓ Комментарии
-
-✓ Новости
-
-✓ Авторизация
-
-✓ Личный кабинет
-
-✓ Админ-панель
-
-✓ Онлайн пользователи
-
-✓ Поиск по базе
-
-========================================================
-*/
-
-
-/* ========================================= */
-/* ГОТОВО */
-/* ========================================= */
 
 /* ========================================= */
 /* ПОПУЛЯРНЫЕ СТАТЬИ */
@@ -529,23 +389,42 @@ const ASIS = {
 async function initPopularArticles() {
 
     const grid =
-        document.getElementById("popularGrid");
+        document.getElementById(
+            "popularGrid"
+        );
 
-    if (!grid) return;
+
+    /*
+    Если контейнера нет,
+    не ломаем остальную страницу.
+    */
+
+    if (!grid) {
+
+        console.warn(
+            "A.S.I.S: #popularGrid не найден."
+        );
+
+        return;
+
+    }
 
 
     try {
 
         const response =
-            await fetch("archive.json", {
-                cache: "no-store"
-            });
+            await fetch(
+                "archive.json",
+                {
+                    cache: "no-store"
+                }
+            );
 
 
         if (!response.ok) {
 
             throw new Error(
-                "Не удалось загрузить archive.json"
+                `archive.json HTTP ${response.status}`
             );
 
         }
@@ -560,18 +439,18 @@ async function initPopularArticles() {
             archive.length === 0
         ) {
 
-            return;
+            throw new Error(
+                "Архив пуст или имеет неверный формат."
+            );
 
         }
 
 
         /*
-        Пока показываем первые 3 записи
-        из архива.
+        Сейчас показываем первые 3 записи.
 
-        Позже здесь можно подключить
-        Firebase и сортировать статьи
-        по количеству просмотров.
+        Позже сюда можно подключить
+        Firebase и сортировку по просмотрам.
         */
 
         const popular =
@@ -583,64 +462,75 @@ async function initPopularArticles() {
 
         popular.forEach(file => {
 
-            const image =
-                file.image || "";
+            const card =
+                document.createElement(
+                    "article"
+                );
 
-
-            const description =
-                file.description ||
-                "Описание объекта отсутствует.";
-
-
-            const card = document.createElement("article");
 
             card.className =
                 "popular-card";
 
 
-            card.innerHTML = `
+            const image =
+                file.image
+                    ? `
+                        <div class="popular-image">
 
-                <div class="popular-image">
-
-                    ${
-                        image
-                        ? `
                             <img
-                                src="${escapeHTML(image)}"
-                                alt="${escapeHTML(file.name)}"
+                                src="${escapeHTML(file.image)}"
+                                alt="${escapeHTML(file.name || "")}"
                                 loading="lazy"
                                 onerror="this.style.display='none'"
                             >
-                          `
-                        : ""
-                    }
 
-                </div>
+                        </div>
+                      `
+                    : "";
 
+
+            const type =
+                file.type ||
+                "АРХИВ";
+
+
+            const description =
+                truncateText(
+                    file.description ||
+                    "Описание объекта отсутствует.",
+                    140
+                );
+
+
+            card.innerHTML = `
+
+                ${image}
 
                 <div class="popular-content">
 
                     <span class="popular-type">
-                        ${escapeHTML(
-                            file.type || "АРХИВ"
-                        )}
+
+                        ${escapeHTML(type)}
+
                     </span>
 
 
                     <h3>
+
                         ${escapeHTML(
-                            file.name || "Без названия"
+                            file.name ||
+                            "Без названия"
                         )}
+
                     </h3>
 
 
                     <p>
+
                         ${escapeHTML(
-                            truncateText(
-                                description,
-                                140
-                            )
+                            description
                         )}
+
                     </p>
 
 
@@ -650,7 +540,9 @@ async function initPopularArticles() {
                         )}"
                         class="button secondary"
                     >
+
                         ОТКРЫТЬ ДОСЬЕ
+
                     </a>
 
                 </div>
@@ -663,9 +555,34 @@ async function initPopularArticles() {
         });
 
 
+        /*
+        Добавляем анимацию новым карточкам.
+        */
+
+        const newCards =
+            grid.querySelectorAll(
+                ".popular-card"
+            );
+
+
+        newCards.forEach(card => {
+
+            card.classList.add("fade");
+
+
+            requestAnimationFrame(() => {
+
+                card.classList.add("show");
+
+            });
+
+        });
+
+
         console.log(
             "%cA.S.I.S POPULAR ARTICLES ONLINE",
-            "color:#39D98A;font-size:16px;font-weight:bold"
+            "color:#39D98A;font-size:16px;font-weight:bold",
+            popular
         );
 
 
@@ -679,3 +596,351 @@ async function initPopularArticles() {
     }
 
 }
+
+
+/* ========================================= */
+/* МОБИЛЬНОЕ МЕНЮ */
+/* ========================================= */
+
+function initMobileMenu() {
+
+    const button =
+        document.querySelector(
+            ".mobile-menu"
+        );
+
+
+    const navigation =
+        document.querySelector(
+            ".navigation"
+        );
+
+
+    if (!button || !navigation) return;
+
+
+    button.addEventListener(
+        "click",
+        () => {
+
+            navigation.classList.toggle(
+                "mobile-open"
+            );
+
+
+            button.classList.toggle(
+                "opened"
+            );
+
+        }
+    );
+
+}
+
+
+initMobileMenu();
+
+
+/* ========================================= */
+/* ПОИСК */
+/* ========================================= */
+
+function initSearch() {
+
+    const input =
+        document.querySelector(
+            ".search-box input"
+        );
+
+
+    if (!input) return;
+
+
+    input.addEventListener(
+        "input",
+        function () {
+
+            console.log(
+                "Поиск:",
+                this.value
+            );
+
+
+            /*
+            Позже здесь будет настоящий
+            поиск по базе A.S.I.S.
+            */
+
+        }
+    );
+
+}
+
+
+initSearch();
+
+
+/* ========================================= */
+/* ЭФФЕКТ СВЕЧЕНИЯ КАРТОЧЕК */
+/* ========================================= */
+
+function initCardGlow() {
+
+    const cards =
+        document.querySelectorAll(
+
+            ".section-card, " +
+            ".news-card, " +
+            ".popular-card, " +
+            ".site-card"
+
+        );
+
+
+    cards.forEach(card => {
+
+        card.addEventListener(
+            "mousemove",
+            e => {
+
+                const rect =
+                    card.getBoundingClientRect();
+
+
+                const x =
+                    e.clientX -
+                    rect.left;
+
+
+                const y =
+                    e.clientY -
+                    rect.top;
+
+
+                card.style.background =
+                    `radial-gradient(
+                        circle at ${x}px ${y}px,
+                        rgba(57,217,138,.12),
+                        rgba(28,33,40,1) 70%
+                    )`;
+
+            }
+        );
+
+
+        card.addEventListener(
+            "mouseleave",
+            () => {
+
+                card.style.background =
+                    "";
+
+            }
+        );
+
+    });
+
+}
+
+
+initCardGlow();
+
+
+/* ========================================= */
+/* КНОПКА "НАВЕРХ" */
+/* ========================================= */
+
+const topButton =
+    document.createElement(
+        "button"
+    );
+
+
+topButton.innerHTML =
+    "↑";
+
+
+topButton.className =
+    "scroll-top";
+
+
+topButton.setAttribute(
+    "aria-label",
+    "Наверх"
+);
+
+
+document.body.appendChild(
+    topButton
+);
+
+
+window.addEventListener(
+    "scroll",
+    () => {
+
+        if (window.scrollY > 500) {
+
+            topButton.classList.add(
+                "visible"
+            );
+
+        } else {
+
+            topButton.classList.remove(
+                "visible"
+            );
+
+        }
+
+    }
+);
+
+
+topButton.addEventListener(
+    "click",
+    () => {
+
+        window.scrollTo({
+
+            top: 0,
+
+            behavior: "smooth"
+
+        });
+
+    }
+);
+
+
+/* ========================================= */
+/* ПРИВЕТСТВИЕ */
+/* ========================================= */
+
+console.log(
+    "%cA.S.I.S. v2.0",
+    "color:#39D98A;font-size:20px;font-weight:bold;"
+);
+
+
+console.log(
+    "Archive Survival Information System"
+);
+
+
+/* ========================================= */
+/* FIREBASE — ПОДГОТОВКА */
+/* ========================================= */
+
+const ASIS = {
+
+    version: "2.0",
+
+    firebase: false,
+
+    user: null
+
+};
+
+
+/*
+Позже здесь подключатся:
+
+✓ Firebase Authentication
+✓ Firebase Firestore
+✓ Комментарии
+✓ Новости
+✓ Авторизация
+✓ Личный кабинет
+✓ Админ-панель
+✓ Онлайн пользователи
+✓ Поиск по базе
+*/
+
+
+/* ========================================= */
+/* ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ */
+/* ========================================= */
+
+function escapeHTML(value) {
+
+    return String(
+        value ?? ""
+    )
+
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+
+        .replace(
+            /</g,
+            "&lt;"
+        )
+
+        .replace(
+            />/g,
+            "&gt;"
+        )
+
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+
+/* ========================================= */
+/* ОБРЕЗКА ТЕКСТА */
+/* ========================================= */
+
+function truncateText(
+    text,
+    maxLength
+) {
+
+    if (!text) {
+
+        return "";
+
+    }
+
+
+    text =
+        String(text);
+
+
+    if (
+        text.length <= maxLength
+    ) {
+
+        return text;
+
+    }
+
+
+    return (
+
+        text
+            .substring(
+                0,
+                maxLength
+            )
+            .trim()
+
+        + "..."
+
+    );
+
+}
+
+
+/* ========================================= */
+/* ГОТОВО */
+/* ========================================= */
