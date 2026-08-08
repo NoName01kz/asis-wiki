@@ -11,7 +11,7 @@
 
     <meta
         name="description"
-        content="Просмотр новости A.S.I.S. — Archive Survival Information System">
+        content="Новости A.S.I.S. — Archive Survival Information System">
 
     <title>
         Новость — A.S.I.S.
@@ -21,10 +21,488 @@
         rel="stylesheet"
         href="style.css">
 
+    <style>
+
+        /* =====================================================
+           NEWS VIEW
+        ===================================================== */
+
+        body.news-page {
+            background:
+                radial-gradient(
+                    circle at top,
+                    rgba(57, 217, 138, 0.04),
+                    transparent 35%
+                ),
+                #07090a;
+        }
+
+
+        /* =====================================================
+           HERO
+        ===================================================== */
+
+        .news-article-hero {
+
+            position: relative;
+
+            min-height: 620px;
+
+            display: flex;
+
+            align-items: flex-end;
+
+            overflow: hidden;
+
+            background:
+                #080a0b;
+
+        }
+
+
+        .news-hero-background {
+
+            position: absolute;
+
+            inset: 0;
+
+            background-size: cover;
+
+            background-position: center;
+
+            transform: scale(1.03);
+
+            filter:
+                brightness(.52)
+                saturate(.75);
+
+        }
+
+
+        .news-hero-background::after {
+
+            content: "";
+
+            position: absolute;
+
+            inset: 0;
+
+            background:
+                linear-gradient(
+                    to bottom,
+                    rgba(0,0,0,.15) 0%,
+                    rgba(0,0,0,.3) 35%,
+                    rgba(7,9,10,.85) 78%,
+                    #07090a 100%
+                );
+
+        }
+
+
+        .news-hero-content {
+
+            position: relative;
+
+            z-index: 2;
+
+            width: 100%;
+
+            max-width: 1000px;
+
+            margin: 0 auto;
+
+            padding:
+                120px 25px 65px;
+
+            text-align: center;
+
+        }
+
+
+        .news-back {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            margin-bottom: 35px;
+
+            color: #a8b0b5;
+
+            text-decoration: none;
+
+            font-size: 12px;
+
+            font-weight: 600;
+
+            letter-spacing: 1.5px;
+
+            text-transform: uppercase;
+
+            transition: .2s;
+
+        }
+
+
+        .news-back:hover {
+
+            color: #39d98a;
+
+        }
+
+
+        .news-category {
+
+            display: inline-block;
+
+            margin-bottom: 18px;
+
+            color: #39d98a;
+
+            font-size: 12px;
+
+            font-weight: 700;
+
+            letter-spacing: 3px;
+
+            text-transform: uppercase;
+
+        }
+
+
+        .news-article-title {
+
+            margin: 0 auto 18px;
+
+            max-width: 900px;
+
+            color: #ffffff;
+
+            font-size: clamp(
+                38px,
+                6vw,
+                72px
+            );
+
+            line-height: 1.02;
+
+            font-weight: 800;
+
+            letter-spacing: -2px;
+
+            text-shadow:
+                0 3px 20px rgba(0,0,0,.7);
+
+        }
+
+
+        .news-date {
+
+            color: #8a949f;
+
+            font-size: 12px;
+
+            letter-spacing: 2px;
+
+            text-transform: uppercase;
+
+        }
+
+
+        /* =====================================================
+           ARTICLE
+        ===================================================== */
+
+        .news-article {
+
+            width: 100%;
+
+            max-width: 860px;
+
+            margin: 0 auto;
+
+            padding:
+                60px 25px 100px;
+
+        }
+
+
+        .news-cover {
+
+            width: 100%;
+
+            margin-bottom: 45px;
+
+            overflow: hidden;
+
+            background: #0d1113;
+
+            border:
+                1px solid
+                rgba(255,255,255,.07);
+
+            box-shadow:
+                0 25px 80px
+                rgba(0,0,0,.35);
+
+        }
+
+
+        .news-cover img {
+
+            display: block;
+
+            width: 100%;
+
+            height: auto;
+
+            max-height: 600px;
+
+            object-fit: cover;
+
+        }
+
+
+        /* =====================================================
+           INTRO
+        ===================================================== */
+
+        .news-description {
+
+            margin-bottom: 40px;
+
+            padding-left: 22px;
+
+            border-left:
+                3px solid
+                #39d98a;
+
+            color: #d5dadd;
+
+            font-size: 21px;
+
+            line-height: 1.7;
+
+        }
+
+
+        /* =====================================================
+           TEXT
+        ===================================================== */
+
+        .news-content {
+
+            color: #b7bec3;
+
+            font-size: 17px;
+
+            line-height: 1.95;
+
+        }
+
+
+        .news-content p {
+
+            margin:
+                0 0 28px;
+
+        }
+
+
+        .news-content h2 {
+
+            margin:
+                55px 0 20px;
+
+            color: #ffffff;
+
+            font-size: 28px;
+
+        }
+
+
+        .news-content h3 {
+
+            margin:
+                45px 0 18px;
+
+            color: #39d98a;
+
+            font-size: 21px;
+
+        }
+
+
+        /* =====================================================
+           META
+        ===================================================== */
+
+        .news-meta {
+
+            display: flex;
+
+            flex-wrap: wrap;
+
+            gap: 12px;
+
+            margin-top: 55px;
+
+            padding-top: 25px;
+
+            border-top:
+                1px solid
+                rgba(255,255,255,.08);
+
+        }
+
+
+        .news-meta-item {
+
+            padding:
+                9px 13px;
+
+            background:
+                rgba(255,255,255,.025);
+
+            border:
+                1px solid
+                rgba(255,255,255,.07);
+
+            color: #7f898f;
+
+            font-size: 11px;
+
+            letter-spacing: 1px;
+
+            text-transform: uppercase;
+
+        }
+
+
+        .news-meta-item strong {
+
+            color: #39d98a;
+
+            font-weight: 600;
+
+        }
+
+
+        /* =====================================================
+           ERROR
+        ===================================================== */
+
+        .news-view-error {
+
+            max-width: 800px;
+
+            margin:
+                120px auto;
+
+            padding:
+                70px 25px;
+
+            text-align: center;
+
+        }
+
+
+        .news-error-code {
+
+            margin-bottom: 15px;
+
+            color: #39d98a;
+
+            font-size: 13px;
+
+            letter-spacing: 4px;
+
+            font-weight: 700;
+
+        }
+
+
+        .news-view-error h1 {
+
+            margin-bottom: 15px;
+
+            color: #ffffff;
+
+        }
+
+
+        .news-view-error p {
+
+            margin-bottom: 30px;
+
+            color: #7f898f;
+
+        }
+
+
+        /* =====================================================
+           MOBILE
+        ===================================================== */
+
+        @media (max-width: 700px) {
+
+            .news-article-hero {
+
+                min-height: 520px;
+
+            }
+
+
+            .news-hero-content {
+
+                padding:
+                    100px 20px 45px;
+
+            }
+
+
+            .news-article-title {
+
+                font-size: 38px;
+
+                letter-spacing: -1px;
+
+            }
+
+
+            .news-description {
+
+                font-size: 18px;
+
+            }
+
+
+            .news-content {
+
+                font-size: 16px;
+
+                line-height: 1.8;
+
+            }
+
+
+            .news-article {
+
+                padding:
+                    35px 18px 70px;
+
+            }
+
+        }
+
+    </style>
+
 </head>
 
 
-<body>
+<body class="news-page">
 
 
 <!-- =====================================================
@@ -67,10 +545,9 @@
      HEADER
 ===================================================== -->
 
-<header class="header">
+<header class="site-header">
 
     <div class="container">
-
 
         <a
             href="index.html"
@@ -126,16 +603,6 @@
 
         <div class="header-right">
 
-            <div class="search-box">
-
-                <input
-                    id="newsViewSearch"
-                    type="text"
-                    placeholder="Поиск новостей...">
-
-            </div>
-
-
             <a
                 href="login.html"
                 class="login-button">
@@ -156,167 +623,191 @@
 
         </button>
 
-
     </div>
 
 </header>
 
 
 <!-- =====================================================
-     NEWS VIEW
+     NEWS HERO
+===================================================== -->
+
+<section
+    id="newsHero"
+    class="news-article-hero">
+
+
+    <div
+        id="newsHeroBackground"
+        class="news-hero-background">
+
+    </div>
+
+
+    <div class="news-hero-content">
+
+        <a
+            href="news.html"
+            class="news-back">
+
+            ← Назад к новостям
+
+        </a>
+
+
+        <div
+            id="newsCategory"
+            class="news-category">
+
+            ЗАГРУЗКА
+
+        </div>
+
+
+        <h1
+            id="newsTitle"
+            class="news-article-title">
+
+            Загрузка новости...
+
+        </h1>
+
+
+        <div
+            id="newsDate"
+            class="news-date">
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     ARTICLE
 ===================================================== -->
 
 <main>
 
-
-    <section class="page-hero">
-
-        <div class="container">
-
-            <span
-                id="newsCategory"
-                class="hero-tag">
-
-                НОВОСТИ A.S.I.S.
-
-            </span>
+    <article class="news-article">
 
 
-            <h1 id="newsTitle">
+        <!-- COVER -->
 
-                Загрузка...
+        <div class="news-cover">
 
-            </h1>
-
-
-            <p id="newsDescription">
-
-                Загрузка новости из архива...
-
-            </p>
-
-        </div>
-
-    </section>
-
-
-
-    <!-- =================================================
-         NEWS ARTICLE
-    ================================================= -->
-
-    <section class="section">
-
-   <div class="container">
-
-    <article class="news-view glass">
-
-        <div class="news-view-image">
             <img
                 id="newsImage"
                 src=""
-                alt="">
+                alt=""
+                style="display:none;">
+
         </div>
 
-        <div class="news-view-content">
 
-            <span id="newsCategory" class="hero-tag">
-                ЗАГРУЗКА
-            </span>
+        <!-- DESCRIPTION -->
 
-            <h1 id="newsTitle">
-                Загрузка новости...
-            </h1>
+        <div
+            id="newsDescription"
+            class="news-description">
 
-            <span id="newsDate" class="news-date">
-            </span>
+        </div>
 
-            <p id="newsDescription">
-            </p>
 
-            <div
-                id="newsContent"
-                class="news-text">
+        <!-- CONTENT -->
+
+        <div
+            id="newsContent"
+            class="news-content">
+
+        </div>
+
+
+        <!-- META -->
+
+        <div class="news-meta">
+
+            <div class="news-meta-item">
+
+                ID:
+
+                <strong id="newsId">
+                    —
+                </strong>
+
+            </div>
+
+
+            <div class="news-meta-item">
+
+                Статус:
+
+                <strong id="newsStatus">
+                    —
+                </strong>
+
+            </div>
+
+
+            <div class="news-meta-item">
+
+                Категория:
+
+                <strong id="newsMetaCategory">
+                    —
+                </strong>
+
             </div>
 
         </div>
+
 
     </article>
 
-</div>
-
-
-            <!-- =================================================
-                 ERROR
-            ================================================= -->
-
-            <div
-                id="newsError"
-                class="archive-panel glass"
-                style="display:none; text-align:center;">
-
-
-                <div class="archive-error-code">
-
-                    NEWS ERROR
-
-                </div>
-
-
-                <h2 id="newsErrorTitle">
-
-                    Новость не найдена
-
-                </h2>
-
-
-                <p
-                    id="newsErrorText"
-                    style="
-                        color:var(--text-light);
-                        margin-top:15px;
-                        line-height:1.8;
-                    ">
-
-                    Запрошенная новость отсутствует
-                    в базе данных A.S.I.S.
-
-                </p>
-
-
-                <div
-                    style="
-                        margin-top:25px;">
-
-                    <a
-                        href="news.html"
-                        class="button primary">
-
-                        Вернуться к новостям
-
-                    </a>
-
-                </div>
-
-
-            </div>
-
-
-        </div>
-
-    </section>
-
 </main>
+
+
+<!-- =====================================================
+     ERROR
+===================================================== -->
+
+<div
+    id="newsError"
+    class="news-view-error"
+    style="display:none;">
+
+    <div class="news-error-code">
+        A.S.I.S. / 404
+    </div>
+
+    <h1>
+        НОВОСТЬ НЕ НАЙДЕНА
+    </h1>
+
+    <p>
+        Запрошенная запись отсутствует
+        в базе данных A.S.I.S.
+    </p>
+
+    <a
+        href="news.html"
+        class="button primary">
+
+        ← Вернуться к новостям
+
+    </a>
+
+</div>
 
 
 <!-- =====================================================
      FOOTER
 ===================================================== -->
 
-<footer class="footer">
+<footer class="site-footer">
 
     <div class="container">
-
 
         <div class="footer-grid">
 
@@ -328,19 +819,15 @@
                     alt="A.S.I.S."
                     class="footer-logo">
 
-
                 <h2>
                     A.S.I.S.
                 </h2>
-
 
                 <p>
                     Archive Survival Information System
                 </p>
 
-
-                <p
-                    style="margin-top:15px;">
+                <p style="margin-top:15px;">
 
                     Архив выживших.
                     Система хранения и распространения
@@ -349,7 +836,6 @@
                 </p>
 
             </div>
-
 
 
             <div>
@@ -387,7 +873,6 @@
                 </ul>
 
             </div>
-
 
 
             <div>
@@ -430,7 +915,6 @@
             Все права защищены.
 
         </div>
-
 
     </div>
 
