@@ -70,9 +70,6 @@ async function loadIndexArchive() {
 
         renderRandomFile();
 
-        initDataCounters();
-
-
     } catch (error) {
 
         console.error(
