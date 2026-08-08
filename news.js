@@ -1,68 +1,42 @@
 /*
-=========================================================
+=====================================================
 A.S.I.S.
-Archive Survival Information System
+ARCHIVE SURVIVAL INFORMATION SYSTEM
 
 news.js
 Динамическая страница новостей
-=========================================================
+=====================================================
 */
 
 document.addEventListener("DOMContentLoaded", () => {
 
-    initNewsPage();
+    loadNews();
 
 });
 
 
-/*
-=========================================================
+/* =====================================================
 ГЛОБАЛЬНЫЕ ДАННЫЕ
-=========================================================
-*/
+===================================================== */
 
 let newsArchive = [];
 
-let currentFilter = "all";
+let currentCategory = "all";
 
 let currentSearch = "";
 
 
-/*
-=========================================================
-ИНИЦИАЛИЗАЦИЯ
-=========================================================
-*/
-
-async function initNewsPage() {
-
-    setupNewsFilters();
-
-    setupNewsSearch();
-
-    setupHeaderSearch();
-
-    await loadNewsArchive();
-
-}
-
-
-/*
-=========================================================
+/* =====================================================
 ЗАГРУЗКА NEWS.JSON
-=========================================================
-*/
+===================================================== */
 
-async function loadNewsArchive() {
+async function loadNews() {
 
     try {
 
-        const response = await fetch(
-            "news.json",
-            {
-                cache: "no-store"
-            }
-        );
+        const response = await fetch("news.json", {
+            cache: "no-store"
+        });
 
 
         if (!response.ok) {
@@ -74,20 +48,16 @@ async function loadNewsArchive() {
         }
 
 
-        const data =
-            await response.json();
+        newsArchive = await response.json();
 
 
-        if (!Array.isArray(data)) {
+        if (!Array.isArray(newsArchive)) {
 
             throw new Error(
                 "news.json должен содержать массив новостей"
             );
 
         }
-
-
-        newsArchive = data;
 
 
         console.log(
@@ -101,30 +71,14 @@ async function loadNewsArchive() {
         );
 
 
-        /*
-        Сначала обновляем статистику.
-        */
+        initNewsFilters();
 
-        updateNewsStatistics();
-
-
-        /*
-        Затем отображаем новости.
-        */
+        initNewsSearch();
 
         renderNews();
 
 
-        /*
-        Если URL содержит id,
-        открываем конкретную новость.
-        */
-
-        openNewsFromURL();
-
-
     }
-
     catch (error) {
 
         console.error(
@@ -140,46 +94,56 @@ async function loadNewsArchive() {
 }
 
 
-/*
-=========================================================
-ФИЛЬТРЫ
-=========================================================
-*/
+/* =====================================================
+ФИЛЬТРЫ КАТЕГОРИЙ
+===================================================== */
 
-function setupNewsFilters() {
+function initNewsFilters() {
 
     const filters =
         document.querySelectorAll(
-            "#newsFilters .filter"
+            ".news-filters .filter, .news-filter, [data-category]"
         );
 
 
-    filters.forEach(button => {
+    if (!filters.length) {
 
-        button.addEventListener(
+        console.warn(
+            "Кнопки категорий новостей не найдены"
+        );
+
+        return;
+
+    }
+
+
+    filters.forEach(filter => {
+
+        filter.addEventListener(
             "click",
             () => {
 
-                filters.forEach(
-                    item => {
-
-                        item.classList.remove(
-                            "active"
-                        );
-
-                    }
-                );
+                const category =
+                    filter.dataset.category ||
+                    "all";
 
 
-                button.classList.add(
+                currentCategory =
+                    normalize(category);
+
+
+                filters.forEach(button => {
+
+                    button.classList.remove(
+                        "active"
+                    );
+
+                });
+
+
+                filter.classList.add(
                     "active"
                 );
-
-
-                currentFilter =
-                    normalize(
-                        button.dataset.filter
-                    );
 
 
                 renderNews();
@@ -192,21 +156,29 @@ function setupNewsFilters() {
 }
 
 
-/*
-=========================================================
+/* =====================================================
 ПОИСК
-=========================================================
-*/
+===================================================== */
 
-function setupNewsSearch() {
+function initNewsSearch() {
 
     const search =
-        document.getElementById(
-            "newsSearch"
+        document.querySelector(
+            "#newsSearch"
+        ) ||
+        document.querySelector(
+            ".news-search input"
+        ) ||
+        document.querySelector(
+            ".archive-search input"
         );
 
 
     if (!search) {
+
+        console.warn(
+            "Поле поиска новостей не найдено"
+        );
 
         return;
 
@@ -231,270 +203,185 @@ function setupNewsSearch() {
 }
 
 
-/*
-=========================================================
-ПОИСК В HEADER
-=========================================================
-*/
+/* =====================================================
+ФИЛЬТРАЦИЯ НОВОСТЕЙ
+===================================================== */
 
-function setupHeaderSearch() {
+function getFilteredNews() {
 
-    const headerSearch =
-        document.getElementById(
-            "headerSearch"
+    return newsArchive.filter(news => {
+
+
+        /* -----------------------------------------
+        КАТЕГОРИЯ
+        ----------------------------------------- */
+
+        const newsCategory =
+            getNewsCategory(news);
+
+
+        let categoryMatch = true;
+
+
+        if (
+            currentCategory &&
+            currentCategory !== "all" &&
+            currentCategory !== "все"
+        ) {
+
+            categoryMatch =
+                newsCategory ===
+                currentCategory;
+
+        }
+
+
+        if (!categoryMatch) {
+
+            return false;
+
+        }
+
+
+        /* -----------------------------------------
+        ПОИСК
+        ----------------------------------------- */
+
+        if (!currentSearch) {
+
+            return true;
+
+        }
+
+
+        const searchableText = normalize(
+            [
+                news.title,
+                news.name,
+                news.description,
+                news.text,
+                news.content,
+                news.category,
+                news.type,
+                news.date
+            ]
+            .filter(Boolean)
+            .join(" ")
         );
 
 
-    const newsSearch =
-        document.getElementById(
-            "newsSearch"
+        return searchableText.includes(
+            currentSearch
+        );
+
+    });
+
+}
+
+
+/* =====================================================
+ОПРЕДЕЛЕНИЕ КАТЕГОРИИ
+===================================================== */
+
+function getNewsCategory(news) {
+
+    return normalize(
+        news.category ||
+        news.type ||
+        news.section ||
+        news.tag ||
+        ""
+    );
+
+}
+
+
+/* =====================================================
+ОТРИСОВКА НОВОСТЕЙ
+===================================================== */
+
+function renderNews() {
+
+    const container =
+        document.querySelector(
+            ".news-grid"
         );
 
 
-    if (
-        !headerSearch ||
-        !newsSearch
-    ) {
+    if (!container) {
+
+        console.warn(
+            "Элемент .news-grid не найден"
+        );
 
         return;
 
     }
 
 
-    headerSearch.addEventListener(
-        "input",
-        event => {
-
-            newsSearch.value =
-                event.target.value;
-
-
-            currentSearch =
-                normalize(
-                    event.target.value
-                );
-
-
-            renderNews();
-
-        }
-    );
-
-
-    headerSearch.addEventListener(
-        "keydown",
-        event => {
-
-            if (
-                event.key === "Enter"
-            ) {
-
-                event.preventDefault();
-
-                newsSearch.focus();
-
-            }
-
-        }
-    );
-
-}
-
-
-/*
-=========================================================
-ОТОБРАЖЕНИЕ НОВОСТЕЙ
-=========================================================
-*/
-
-function renderNews() {
-
     const filteredNews =
         getFilteredNews();
+
+
+    if (!filteredNews.length) {
+
+        container.innerHTML = `
+
+            <div class="news-empty">
+
+                <div class="news-empty-code">
+                    NO RESULTS
+                </div>
+
+                <h3>
+                    НОВОСТИ НЕ НАЙДЕНЫ
+                </h3>
+
+                <p>
+                    По выбранным параметрам
+                    материалов не обнаружено.
+                </p>
+
+            </div>
+
+        `;
+
+        updateNewsCount(0);
+
+        return;
+
+    }
+
+
+    container.innerHTML = "";
+
+
+    filteredNews.forEach(news => {
+
+        container.insertAdjacentHTML(
+            "beforeend",
+            createNewsCard(news)
+        );
+
+    });
 
 
     updateNewsCount(
         filteredNews.length
     );
 
-
-    /*
-    Главное событие.
-    */
-
-    renderFeaturedNews(
-        filteredNews
-    );
-
-
-    /*
-    Основная сетка.
-    */
-
-    renderNewsGrid(
-        filteredNews
-    );
-
-
-    /*
-    Состояние "ничего не найдено".
-    */
-
-    const empty =
-        document.getElementById(
-            "newsEmpty"
-        );
-
-
-    if (empty) {
-
-        empty.style.display =
-            filteredNews.length === 0
-                ? "block"
-                : "none";
-
-    }
-
 }
 
 
-/*
-=========================================================
-ФИЛЬТРАЦИЯ
-=========================================================
-*/
+/* =====================================================
+КАРТОЧКА НОВОСТИ
+===================================================== */
 
-function getFilteredNews() {
-
-    return newsArchive.filter(
-        news => {
-
-            /*
-            Фильтр категории.
-            */
-
-            const category =
-                normalize(
-                    news.category
-                );
-
-
-            const filterMatches =
-                currentFilter === "all" ||
-                category === currentFilter;
-
-
-            if (!filterMatches) {
-
-                return false;
-
-            }
-
-
-            /*
-            Поиск.
-            */
-
-            if (!currentSearch) {
-
-                return true;
-
-            }
-
-
-            const searchableText = [
-
-                news.id,
-
-                news.title,
-
-                news.name,
-
-                news.category,
-
-                news.description,
-
-                news.content,
-
-                news.status,
-
-                news.date
-
-            ]
-                .filter(Boolean)
-                .join(" ");
-
-
-            return normalize(
-                searchableText
-            ).includes(
-                currentSearch
-            );
-
-        }
-    );
-
-}
-
-
-/*
-=========================================================
-ГЛАВНАЯ НОВОСТЬ
-=========================================================
-*/
-
-function renderFeaturedNews(newsList) {
-
-    const container =
-        document.getElementById(
-            "featuredNews"
-        );
-
-
-    if (!container) {
-
-        return;
-
-    }
-
-
-    if (newsList.length === 0) {
-
-        container.innerHTML = "";
-
-        return;
-
-    }
-
-
-    /*
-    Берём первую новость.
-    news.json должен быть расположен
-    от самой новой к старой.
-    */
-
-    const news =
-        newsList[0];
-
-
-    container.innerHTML =
-        createFeaturedNews(
-            news
-        );
-
-}
-
-
-/*
-=========================================================
-FEATURED CARD
-=========================================================
-*/
-
-function createFeaturedNews(news) {
+function createNewsCard(news) {
 
     const id =
-        news.id || "";
+        news.id ||
+        "";
 
 
     const title =
@@ -503,19 +390,24 @@ function createFeaturedNews(news) {
         "Без названия";
 
 
-    const date =
-        news.date ||
-        "Дата неизвестна";
-
-
     const category =
         news.category ||
-        "НОВОСТЬ";
+        news.type ||
+        "НОВОСТИ";
 
 
     const description =
         news.description ||
+        news.text ||
+        news.content ||
         "Описание отсутствует.";
+
+
+    const date =
+        news.date ||
+        news.created ||
+        news.published ||
+        "";
 
 
     const image =
@@ -526,257 +418,76 @@ function createFeaturedNews(news) {
     return `
 
         <article
-            class="news-card featured"
-            style="
-                background:
-                linear-gradient(
-                    rgba(0,0,0,.2),
-                    rgba(0,0,0,.85)
-                ),
-                url('${escapeCSSURL(image)}');
-                background-size:cover;
-                background-position:center;
-            "
+            class="news-card"
+            data-id="${escapeHTML(id)}"
+            data-category="${escapeHTML(category)}"
         >
 
-            <span class="news-date">
-
-                ${escapeHTML(date)}
-
-            </span>
-
-
-            <span class="news-category">
-
-                ${escapeHTML(category)}
-
-            </span>
-
-
-            <h3>
-
-                ${escapeHTML(title)}
-
-            </h3>
-
-
-            <p>
-
-                ${escapeHTML(
-                    truncateText(
-                        description,
-                        300
-                    )
-                )}
-
-            </p>
-
-
-            <a
-                href="news.html?id=${encodeURIComponent(id)}"
-            >
-
-                Читать →
-
-            </a>
-
-        </article>
-
-    `;
-
-}
-
-
-/*
-=========================================================
-СЕТКА НОВОСТЕЙ
-=========================================================
-*/
-
-function renderNewsGrid(newsList) {
-
-    const container =
-        document.getElementById(
-            "newsGrid"
-        );
-
-
-    if (!container) {
-
-        return;
-
-    }
-
-
-    if (newsList.length === 0) {
-
-        container.innerHTML = "";
-
-        return;
-
-    }
-
-
-    /*
-    Первую новость уже показываем
-    в блоке "Главное событие".
-
-    Поэтому в основной сетке
-    начинаем со второй.
-    */
-
-    const gridNews =
-        newsList.slice(1);
-
-
-    if (gridNews.length === 0) {
-
-        container.innerHTML = `
-
-            <div class="archive-empty">
-
-                <h3>
-                    АРХИВ НОВОСТЕЙ
-                </h3>
-
-                <p>
-                    В базе находится только
-                    одна новость.
-                </p>
-
-            </div>
-
-        `;
-
-        return;
-
-    }
-
-
-    container.innerHTML =
-        gridNews
-            .map(
-                news =>
-                    createNewsCard(
-                        news
-                    )
-            )
-            .join("");
-
-}
-
-
-/*
-=========================================================
-КАРТОЧКА НОВОСТИ
-=========================================================
-*/
-
-function createNewsCard(news) {
-
-    const id =
-        news.id || "";
-
-
-    const title =
-        news.title ||
-        news.name ||
-        "Без названия";
-
-
-    const date =
-        news.date ||
-        "Дата неизвестна";
-
-
-    const category =
-        news.category ||
-        "НОВОСТЬ";
-
-
-    const description =
-        news.description ||
-        "Описание отсутствует.";
-
-
-    const image =
-        news.image ||
-        "";
-
-
-    const imageStyle =
-        image
-            ? `
-                background:
-                linear-gradient(
-                    rgba(57,217,138,.08),
-                    rgba(0,0,0,.45)
-                ),
-                url('${escapeCSSURL(image)}');
-                background-size:cover;
-                background-position:center;
-              `
-            : `
-                background:
-                linear-gradient(
-                    rgba(57,217,138,.08),
-                    rgba(0,0,0,.45)
-                );
-              `;
-
-
-    return `
-
-        <article class="news-card">
-
-            <div
-                class="news-card-image"
-                style="${imageStyle}"
-            >
-            </div>
-
-
-            <div class="news-card-content">
-
-                <span class="news-date">
-
-                    ${escapeHTML(date)}
-
-                </span>
+            ${
+                image
+                ? `
+                    <a
+                        href="news-item.html?id=${encodeURIComponent(id)}"
+                        class="news-image-link"
+                    >
+
+                        <div
+                            class="news-image"
+                            style="
+                                background-image:
+                                linear-gradient(
+                                    rgba(0,0,0,.15),
+                                    rgba(0,0,0,.55)
+                                ),
+                                url('${escapeHTML(image)}');
+                            "
+                        >
+                        </div>
+
+                    </a>
+                `
+                : ""
+            }
+
+
+            <div class="news-content">
+
+                ${
+                    date
+                    ? `
+                        <span class="news-date">
+                            ${escapeHTML(date)}
+                        </span>
+                    `
+                    : ""
+                }
 
 
                 <span class="news-category">
-
                     ${escapeHTML(category)}
-
                 </span>
 
 
                 <h3>
-
                     ${escapeHTML(title)}
-
                 </h3>
 
 
                 <p>
-
                     ${escapeHTML(
                         truncateText(
                             description,
-                            180
+                            220
                         )
                     )}
-
                 </p>
 
 
                 <a
-                    href="news.html?id=${encodeURIComponent(id)}"
+                    href="news-item.html?id=${encodeURIComponent(id)}"
+                    class="news-link"
                 >
-
                     Читать →
-
                 </a>
 
             </div>
@@ -788,633 +499,101 @@ function createNewsCard(news) {
 }
 
 
-/*
-=========================================================
-ОТКРЫТИЕ ОТДЕЛЬНОЙ НОВОСТИ
-=========================================================
-*/
-
-function openNewsFromURL() {
-
-    const params =
-        new URLSearchParams(
-            window.location.search
-        );
-
-
-    const id =
-        params.get("id");
-
-
-    if (!id) {
-
-        return;
-
-    }
-
-
-    const news =
-        newsArchive.find(
-            item =>
-                String(item.id)
-                    .toLowerCase() ===
-                String(id)
-                    .toLowerCase()
-        );
-
-
-    if (!news) {
-
-        showArticleNotFound();
-
-        return;
-
-    }
-
-
-    renderFullArticle(
-        news
-    );
-
-
-    /*
-    Скрываем стандартные блоки.
-    */
-
-    const hero =
-        document.querySelector(
-            ".news-hero"
-        );
-
-
-    const control =
-        document.querySelector(
-            ".archive-control"
-        );
-
-
-    const featured =
-        document.querySelector(
-            ".news-featured"
-        );
-
-
-    const newsSection =
-        document.querySelector(
-            ".news"
-        );
-
-
-    const stats =
-        document.querySelector(
-            ".site-stats"
-        );
-
-
-    if (hero) {
-
-        hero.style.display =
-            "none";
-
-    }
-
-
-    if (control) {
-
-        control.style.display =
-            "none";
-
-    }
-
-
-    if (featured) {
-
-        featured.style.display =
-            "none";
-
-    }
-
-
-    if (newsSection) {
-
-        newsSection.style.display =
-            "none";
-
-    }
-
-
-    if (stats) {
-
-        stats.style.display =
-            "none";
-
-    }
-
-
-    const article =
-        document.getElementById(
-            "newsArticle"
-        );
-
-
-    if (article) {
-
-        article.style.display =
-            "block";
-
-    }
-
-}
-
-
-/*
-=========================================================
-ПОЛНАЯ НОВОСТЬ
-=========================================================
-*/
-
-function renderFullArticle(news) {
-
-    const container =
-        document.getElementById(
-            "articleContent"
-        );
-
-
-    if (!container) {
-
-        return;
-
-    }
-
-
-    const title =
-        news.title ||
-        news.name ||
-        "Без названия";
-
-
-    const date =
-        news.date ||
-        "Дата неизвестна";
-
-
-    const category =
-        news.category ||
-        "НОВОСТЬ";
-
-
-    const status =
-        news.status ||
-        "ОПУБЛИКОВАНО";
-
-
-    const image =
-        news.image ||
-        "";
-
-
-    const content =
-        news.content ||
-        news.description ||
-        "Текст новости отсутствует.";
-
-
-    const paragraphs =
-        formatArticleText(
-            content
-        );
-
-
-    container.innerHTML = `
-
-        <span class="archive-id">
-
-            ${escapeHTML(
-                news.id || "NEWS"
-            )}
-
-        </span>
-
-
-        <div class="news-date">
-
-            ${escapeHTML(date)}
-
-        </div>
-
-
-        <span class="archive-type">
-
-            ${escapeHTML(category)}
-
-        </span>
-
-
-        <h1>
-
-            ${escapeHTML(title)}
-
-        </h1>
-
-
-        ${
-            image
-                ? `
-                    <div
-                        class="news-article-image"
-                        style="
-                            background-image:
-                            linear-gradient(
-                                rgba(0,0,0,.1),
-                                rgba(0,0,0,.35)
-                            ),
-                            url('${escapeCSSURL(image)}');
-                        "
-                    >
-                    </div>
-                  `
-                : ""
-        }
-
-
-        <div class="file-status">
-
-            Статус:
-
-            <span>
-
-                ${escapeHTML(status)}
-
-            </span>
-
-        </div>
-
-
-        <div class="news-article-text">
-
-            ${paragraphs}
-
-        </div>
-
-    `;
-
-}
-
-
-/*
-=========================================================
-404 НОВОСТИ
-=========================================================
-*/
-
-function showArticleNotFound() {
-
-    const container =
-        document.getElementById(
-            "articleContent"
-        );
-
-
-    if (!container) {
-
-        return;
-
-    }
-
-
-    container.innerHTML = `
-
-        <div class="archive-error">
-
-            <div class="archive-error-code">
-
-                NEWS 404
-
-            </div>
-
-
-            <h2>
-
-                НОВОСТЬ НЕ НАЙДЕНА
-
-            </h2>
-
-
-            <p>
-
-                Запрашиваемая запись отсутствует
-                в базе данных A.S.I.S.
-
-            </p>
-
-
-            <a
-                href="news.html"
-                class="button primary"
-            >
-
-                ВЕРНУТЬСЯ К НОВОСТЯМ
-
-            </a>
-
-        </div>
-
-    `;
-
-
-    const article =
-        document.getElementById(
-            "newsArticle"
-        );
-
-
-    if (article) {
-
-        article.style.display =
-            "block";
-
-    }
-
-}
-
-
-/*
-=========================================================
-СТАТИСТИКА
-=========================================================
-*/
-
-function updateNewsStatistics() {
-
-    const total =
-        newsArchive.length;
-
-
-    const updates =
-        countNewsCategory(
-            "ОБНОВЛЕНИЕ"
-        );
-
-
-    const events =
-        countNewsCategory(
-            "СОБЫТИЕ"
-        );
-
-
-    const anomalies =
-        countNewsCategory(
-            "АНОМАЛИЯ"
-        );
-
-
-    setCounter(
-        "totalNews",
-        total
-    );
-
-
-    setCounter(
-        "updateNews",
-        updates
-    );
-
-
-    setCounter(
-        "eventNews",
-        events
-    );
-
-
-    setCounter(
-        "anomalyNews",
-        anomalies
-    );
-
-}
-
-
-/*
-=========================================================
-ПОДСЧЁТ КАТЕГОРИЙ
-=========================================================
-*/
-
-function countNewsCategory(category) {
-
-    const target =
-        normalize(category);
-
-
-    return newsArchive.filter(
-        news =>
-            normalize(
-                news.category
-            ) === target
-    ).length;
-
-}
-
-
-/*
-=========================================================
-СЧЁТЧИК
-=========================================================
-*/
-
-function setCounter(
-    id,
-    value
-) {
-
-    const element =
-        document.getElementById(id);
-
-
-    if (element) {
-
-        element.textContent =
-            value;
-
-    }
-
-}
-
-
-/*
-=========================================================
+/* =====================================================
 СЧЁТЧИК НОВОСТЕЙ
-=========================================================
-*/
+===================================================== */
 
 function updateNewsCount(count) {
 
-    const element =
-        document.getElementById(
-            "newsCount"
+    const elements =
+        document.querySelectorAll(
+            "#newsCount, [data-news-count]"
         );
 
 
-    if (!element) {
-
-        return;
-
-    }
-
-
-    if (count === 1) {
+    elements.forEach(element => {
 
         element.textContent =
-            "1 новость";
+            count;
 
-        return;
-
-    }
-
-
-    if (
-        count >= 2 &&
-        count <= 4
-    ) {
-
-        element.textContent =
-            `${count} новости`;
-
-        return;
-
-    }
-
-
-    element.textContent =
-        `${count} новостей`;
+    });
 
 }
 
 
-/*
-=========================================================
+/* =====================================================
 ОШИБКА БАЗЫ
-=========================================================
-*/
+===================================================== */
 
 function showNewsError() {
 
-    const grid =
-        document.getElementById(
-            "newsGrid"
+    const container =
+        document.querySelector(
+            ".news-grid"
         );
 
 
-    if (grid) {
+    if (!container) {
 
-        grid.innerHTML = `
+        return;
 
-            <div class="archive-error">
-
-                <div class="archive-error-code">
-
-                    DATABASE ERROR
-
-                </div>
+    }
 
 
-                <h3>
+    container.innerHTML = `
 
-                    НЕ УДАЛОСЬ ЗАГРУЗИТЬ НОВОСТИ
+        <div class="news-error">
 
-                </h3>
-
-
-                <p>
-
-                    Центральная база данных
-                    A.S.I.S. временно недоступна.
-
-                </p>
-
-
-                <button
-                    class="button primary"
-                    type="button"
-                    onclick="location.reload()"
-                >
-
-                    ПОВТОРИТЬ ЗАПРОС
-
-                </button>
-
+            <div class="news-error-code">
+                DATABASE ERROR
             </div>
 
-        `;
+            <h3>
+                НЕ УДАЛОСЬ ЗАГРУЗИТЬ НОВОСТИ
+            </h3>
 
-    }
+            <p>
+                Центральная база данных
+                A.S.I.S. временно недоступна.
+            </p>
 
+            <button
+                class="button primary"
+                type="button"
+                onclick="location.reload()"
+            >
+                ПОВТОРИТЬ ЗАПРОС
+            </button>
 
-    const featured =
-        document.getElementById(
-            "featuredNews"
-        );
+        </div>
 
-
-    if (featured) {
-
-        featured.innerHTML = "";
-
-    }
-
-
-    setCounter(
-        "totalNews",
-        "—"
-    );
-
-
-    setCounter(
-        "updateNews",
-        "—"
-    );
-
-
-    setCounter(
-        "eventNews",
-        "—"
-    );
-
-
-    setCounter(
-        "anomalyNews",
-        "—"
-    );
-
-
-    updateNewsCount(0);
+    `;
 
 }
 
 
-/*
-=========================================================
+/* =====================================================
 НОРМАЛИЗАЦИЯ
-=========================================================
-*/
+===================================================== */
 
 function normalize(value) {
 
     return String(
         value ?? ""
     )
-        .trim()
-        .toLowerCase();
+    .trim()
+    .toLowerCase()
+    .replace(
+        /ё/g,
+        "е"
+    );
 
 }
 
 
-/*
-=========================================================
+/* =====================================================
 СОКРАЩЕНИЕ ТЕКСТА
-=========================================================
-*/
+===================================================== */
 
 function truncateText(
     text,
@@ -1454,139 +633,47 @@ function truncateText(
 }
 
 
-/*
-=========================================================
-ФОРМАТИРОВАНИЕ ПОЛНОГО ТЕКСТА
-=========================================================
-*/
-
-function formatArticleText(
-    text
-) {
-
-    if (!text) {
-
-        return `
-            <p>
-                Текст новости отсутствует.
-            </p>
-        `;
-
-    }
-
-
-    /*
-    Если content содержит
-    несколько абзацев через пустую строку,
-    превращаем их в отдельные <p>.
-    */
-
-    return String(text)
-        .split(/\n\s*\n/)
-        .map(
-            paragraph => {
-
-                const clean =
-                    paragraph.trim();
-
-
-                if (!clean) {
-
-                    return "";
-
-                }
-
-
-                return `
-                    <p>
-                        ${escapeHTML(clean)}
-                    </p>
-                `;
-
-            }
-        )
-        .join("");
-
-}
-
-
-/*
-=========================================================
+/* =====================================================
 ЗАЩИТА HTML
-=========================================================
-*/
+===================================================== */
 
 function escapeHTML(value) {
 
     return String(
         value ?? ""
     )
-        .replace(
-            /&/g,
-            "&amp;"
-        )
-        .replace(
-            /</g,
-            "&lt;"
-        )
-        .replace(
-            />/g,
-            "&gt;"
-        )
-        .replace(
-            /"/g,
-            "&quot;"
-        )
-        .replace(
-            /'/g,
-            "&#039;"
-        );
-
-}
-
-
-/*
-=========================================================
-ЗАЩИТА URL ИЗОБРАЖЕНИЯ
-=========================================================
-*/
-
-function escapeCSSURL(value) {
-
-    return String(
-        value ?? ""
+    .replace(
+        /&/g,
+        "&amp;"
     )
-        .replace(
-            /\\/g,
-            "\\\\"
-        )
-        .replace(
-            /'/g,
-            "\\'"
-        )
-        .replace(
-            /\)/g,
-            "\\)"
-        )
-        .replace(
-            /\(/g,
-            "\\("
-        );
+    .replace(
+        /</g,
+        "&lt;"
+    )
+    .replace(
+        />/g,
+        "&gt;"
+    )
+    .replace(
+        /"/g,
+        "&quot;"
+    )
+    .replace(
+        /'/g,
+        "&#039;"
+    );
 
 }
 
 
-/*
-=========================================================
+/* =====================================================
 A.S.I.S STATUS
-=========================================================
-*/
+===================================================== */
 
 console.log(
     "%cA.S.I.S.",
     "color:#39D98A;font-size:24px;font-weight:bold"
 );
-
 
 console.log(
     "%cNEWS DATABASE SYSTEM",
