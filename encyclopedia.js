@@ -9,15 +9,17 @@ encyclopedia.js v3.0
 document.addEventListener("DOMContentLoaded", () => {
 
     loadArchive();
+
     initSearch();
+
     initFilters();
 
 });
 
 
-/* =====================================================
-   ГЛОБАЛЬНЫЕ ДАННЫЕ
-===================================================== */
+/* ===================================================== */
+/* ГЛОБАЛЬНЫЕ ДАННЫЕ */
+/* ===================================================== */
 
 let archive = [];
 
@@ -26,15 +28,22 @@ let currentFilter = "all";
 let currentSearch = "";
 
 
-/* =====================================================
-   ЗАГРУЗКА АРХИВА
-===================================================== */
+/* ===================================================== */
+/* ЗАГРУЗКА АРХИВА */
+/* ===================================================== */
 
 async function loadArchive() {
 
     try {
 
-        const response = await fetch("archive.json");
+        const response =
+            await fetch(
+                "archive.json",
+                {
+                    cache: "no-store"
+                }
+            );
+
 
         if (!response.ok) {
 
@@ -44,20 +53,35 @@ async function loadArchive() {
 
         }
 
-        archive = await response.json();
+
+        archive =
+            await response.json();
+
+
+        if (!Array.isArray(archive)) {
+
+            throw new Error(
+                "archive.json должен содержать массив записей."
+            );
+
+        }
+
 
         console.log(
             "%cA.S.I.S ARCHIVE ONLINE",
             "color:#39D98A;font-size:18px;font-weight:bold"
         );
 
+
         console.log(
             `Загружено записей: ${archive.length}`
         );
 
+
         renderArchive();
 
         updateArchiveCounter();
+
 
     }
 
@@ -68,6 +92,7 @@ async function loadArchive() {
             error
         );
 
+
         showArchiveError();
 
     }
@@ -75,14 +100,17 @@ async function loadArchive() {
 }
 
 
-/* =====================================================
-   ОТОБРАЖЕНИЕ АРХИВА
-===================================================== */
+/* ===================================================== */
+/* ОТОБРАЖЕНИЕ АРХИВА */
+/* ===================================================== */
 
 function renderArchive() {
 
     const grid =
-        document.getElementById("archiveGrid");
+        document.getElementById(
+            "archiveGrid"
+        );
+
 
     if (!grid) {
 
@@ -102,11 +130,13 @@ function renderArchive() {
     grid.innerHTML = "";
 
 
-    /* -------------------------------------------------
-       НЕТ РЕЗУЛЬТАТОВ
-    ------------------------------------------------- */
+    /* ------------------------------------------------- */
+    /* НЕТ РЕЗУЛЬТАТОВ */
+    /* ------------------------------------------------- */
 
-    if (filteredFiles.length === 0) {
+    if (
+        filteredFiles.length === 0
+    ) {
 
         grid.innerHTML = `
 
@@ -116,14 +146,17 @@ function renderArchive() {
                     ⌕
                 </div>
 
+
                 <h3>
                     ЗАПИСИ НЕ НАЙДЕНЫ
                 </h3>
+
 
                 <p>
                     По заданным параметрам
                     в архиве отсутствуют записи.
                 </p>
+
 
                 <button
                     class="button primary"
@@ -139,7 +172,9 @@ function renderArchive() {
 
 
         const resetButton =
-            document.getElementById("resetArchive");
+            document.getElementById(
+                "resetArchive"
+            );
 
 
         if (resetButton) {
@@ -159,9 +194,9 @@ function renderArchive() {
     }
 
 
-    /* -------------------------------------------------
-       СОЗДАНИЕ КАРТОЧЕК
-    ------------------------------------------------- */
+    /* ------------------------------------------------- */
+    /* СОЗДАНИЕ КАРТОЧЕК */
+    /* ------------------------------------------------- */
 
     filteredFiles.forEach(file => {
 
@@ -175,21 +210,47 @@ function renderArchive() {
 
     updateArchiveCounter();
 
+
+    /*
+    Добавляем небольшую анимацию
+    после создания карточек.
+    */
+
+    const cards =
+        grid.querySelectorAll(
+            ".archive-card"
+        );
+
+
+    cards.forEach((card, index) => {
+
+        card.style.animationDelay =
+            `${Math.min(index * 40, 400)}ms`;
+
+        card.classList.add(
+            "archive-card-visible"
+        );
+
+    });
+
 }
 
 
-/* =====================================================
-   СОЗДАНИЕ КАРТОЧКИ
-===================================================== */
+/* ===================================================== */
+/* СОЗДАНИЕ КАРТОЧКИ */
+/* ===================================================== */
 
 function createArchiveCard(file) {
 
     const dangerClass =
-        getDangerClass(file.danger);
+        getDangerClass(
+            file.danger
+        );
 
 
     const image =
-        file.image
+        file.image &&
+        String(file.image).trim()
             ? file.image
             : "assets/images/no-image.webp";
 
@@ -218,32 +279,55 @@ function createArchiveCard(file) {
             : "АРХИВ";
 
 
+    const id =
+        file.id
+            ? file.id
+            : "UNKNOWN";
+
+
+    const name =
+        file.name
+            ? file.name
+            : "Без названия";
+
+
     return `
 
         <article
             class="archive-card"
-            data-id="${escapeHTML(file.id)}"
-            data-danger="${escapeHTML(file.danger || "")}"
+            data-id="${escapeHTML(id)}"
+            data-danger="${escapeHTML(
+                file.danger || ""
+            )}"
         >
 
             <div class="archive-card-image">
 
                 <img
                     src="${escapeHTML(image)}"
-                    alt="${escapeHTML(file.name)}"
+                    alt="${escapeHTML(name)}"
                     loading="lazy"
-                    onerror="this.src='assets/images/no-image.webp'"
+                    onerror="
+                        this.onerror=null;
+                        this.src='assets/images/no-image.webp';
+                    "
                 >
 
+
                 <span class="archive-card-id">
-                    ${escapeHTML(file.id)}
+                    ${escapeHTML(id)}
                 </span>
 
-                <span class="
-                    archive-card-danger
-                    ${dangerClass}
-                ">
-                    ${escapeHTML(file.danger || "UNKNOWN")}
+
+                <span
+                    class="
+                        archive-card-danger
+                        ${dangerClass}
+                    "
+                >
+                    ${escapeHTML(
+                        file.danger || "UNKNOWN"
+                    )}
                 </span>
 
             </div>
@@ -257,6 +341,7 @@ function createArchiveCard(file) {
                         ${escapeHTML(type)}
                     </span>
 
+
                     <span class="archive-card-status">
                         ${escapeHTML(status)}
                     </span>
@@ -266,7 +351,7 @@ function createArchiveCard(file) {
 
                 <h3 class="archive-card-title">
 
-                    ${escapeHTML(file.name)}
+                    ${escapeHTML(name)}
 
                 </h3>
 
@@ -281,7 +366,10 @@ function createArchiveCard(file) {
                 <p class="archive-card-description">
 
                     ${escapeHTML(
-                        truncateText(description, 180)
+                        truncateText(
+                            description,
+                            180
+                        )
                     )}
 
                 </p>
@@ -293,9 +381,12 @@ function createArchiveCard(file) {
 
                         ОПАСНОСТЬ:
 
-                        <strong class="${dangerClass}">
+                        <strong
+                            class="${dangerClass}"
+                        >
                             ${escapeHTML(
-                                file.danger || "UNKNOWN"
+                                file.danger ||
+                                "UNKNOWN"
                             )}
                         </strong>
 
@@ -303,8 +394,12 @@ function createArchiveCard(file) {
 
 
                     <a
-                        href="file.html?id=${encodeURIComponent(file.id)}"
-                        class="button primary archive-open-button"
+                        href="file.html?id=${encodeURIComponent(id)}"
+                        class="
+                            button
+                            primary
+                            archive-open-button
+                        "
                     >
                         ОТКРЫТЬ ДОСЬЕ
                     </a>
@@ -320,56 +415,156 @@ function createArchiveCard(file) {
 }
 
 
-/* =====================================================
-   ФИЛЬТРАЦИЯ
-===================================================== */
+/* ===================================================== */
+/* ФИЛЬТРАЦИЯ */
+/* ===================================================== */
 
 function getFilteredArchive() {
 
-    let result = [...archive];
+    let result =
+        [...archive];
 
 
-    /* -------------------------------------------------
-       ФИЛЬТР КАТЕГОРИИ
-    ------------------------------------------------- */
+    /* ------------------------------------------------- */
+    /* ФИЛЬТР КАТЕГОРИИ */
+    /* ------------------------------------------------- */
 
-    if (currentFilter !== "all") {
+    if (
+        currentFilter !== "all"
+    ) {
 
         result =
             result.filter(file => {
 
                 const category =
-                    normalize(file.category);
+                    normalize(
+                        file.category
+                    );
+
 
                 const type =
-                    normalize(file.type);
+                    normalize(
+                        file.type
+                    );
+
+
+                const filter =
+                    normalize(
+                        currentFilter
+                    );
 
 
                 /*
-                 NPC в твоём archive.json:
+                NPC может иметь:
 
-                 type: NPC
-                 category: Персонажи
+                type: NPC
+                category: Персонажи
 
-                 Поэтому проверяем оба поля.
+                Поэтому проверяем
+                оба значения.
                 */
 
                 if (
-                    currentFilter === "NPC"
+                    filter === "npc"
                 ) {
 
                     return (
+
                         type === "npc" ||
+
                         category === "npc" ||
+
                         category === "персонажи"
+
+                    );
+
+                }
+
+
+                /*
+                Заражённые
+                */
+
+                if (
+                    filter === "заражённые"
+                ) {
+
+                    return (
+
+                        category === "заражённые" ||
+
+                        type === "заражённый" ||
+
+                        type === "зараженные"
+
+                    );
+
+                }
+
+
+                /*
+                Аномалии
+                */
+
+                if (
+                    filter === "аномалии"
+                ) {
+
+                    return (
+
+                        category === "аномалии" ||
+
+                        type === "аномалия"
+
+                    );
+
+                }
+
+
+                /*
+                Локации
+                */
+
+                if (
+                    filter === "локации"
+                ) {
+
+                    return (
+
+                        category === "локации" ||
+
+                        type === "локация"
+
+                    );
+
+                }
+
+
+                /*
+                Фракции
+                */
+
+                if (
+                    filter === "фракции"
+                ) {
+
+                    return (
+
+                        category === "фракции" ||
+
+                        type === "фракция"
+
                     );
 
                 }
 
 
                 return (
-                    category ===
-                    normalize(currentFilter)
+
+                    category === filter ||
+
+                    type === filter
+
                 );
 
             });
@@ -377,11 +572,13 @@ function getFilteredArchive() {
     }
 
 
-    /* -------------------------------------------------
-       ПОИСК
-    ------------------------------------------------- */
+    /* ------------------------------------------------- */
+    /* ПОИСК */
+    /* ------------------------------------------------- */
 
-    if (currentSearch !== "") {
+    if (
+        currentSearch !== ""
+    ) {
 
         result =
             result.filter(file => {
@@ -389,18 +586,29 @@ function getFilteredArchive() {
                 const searchData = [
 
                     file.id,
+
                     file.name,
+
                     file.type,
+
                     file.category,
+
                     file.description,
+
                     file.history,
+
                     file.advice,
+
                     file.status,
+
                     file.danger
 
                 ]
+
                 .filter(Boolean)
+
                 .join(" ")
+
                 .toLowerCase();
 
 
@@ -418,9 +626,9 @@ function getFilteredArchive() {
 }
 
 
-/* =====================================================
-   ПОИСК
-===================================================== */
+/* ===================================================== */
+/* ПОИСК */
+/* ===================================================== */
 
 function initSearch() {
 
@@ -433,7 +641,7 @@ function initSearch() {
     if (!input) {
 
         console.warn(
-            "searchInput не найден"
+            "A.S.I.S: searchInput не найден."
         );
 
         return;
@@ -459,9 +667,9 @@ function initSearch() {
 }
 
 
-/* =====================================================
-   ФИЛЬТРЫ
-===================================================== */
+/* ===================================================== */
+/* ФИЛЬТРЫ */
+/* ===================================================== */
 
 function initFilters() {
 
@@ -474,7 +682,7 @@ function initFilters() {
     if (!buttons.length) {
 
         console.warn(
-            "Кнопки .filter не найдены"
+            "A.S.I.S: кнопки .filter не найдены."
         );
 
         return;
@@ -503,10 +711,18 @@ function initFilters() {
 
 
                 /*
-                 Поддерживаем:
+                Поддерживаем:
 
-                 data-category
-                 и старый data-type
+                data-category
+                data-type
+
+                Например:
+
+                data-category="Заражённые"
+
+                или
+
+                data-type="Заражённый"
                 */
 
                 const category =
@@ -533,15 +749,18 @@ function initFilters() {
 }
 
 
-/* =====================================================
-   СБРОС ФИЛЬТРОВ
-===================================================== */
+/* ===================================================== */
+/* СБРОС ФИЛЬТРОВ */
+/* ===================================================== */
 
 function resetArchive() {
 
-    currentFilter = "all";
+    currentFilter =
+        "all";
 
-    currentSearch = "";
+
+    currentSearch =
+        "";
 
 
     const input =
@@ -558,7 +777,9 @@ function resetArchive() {
 
 
     document
-        .querySelectorAll(".filter")
+        .querySelectorAll(
+            ".filter"
+        )
         .forEach(button => {
 
             button.classList.remove(
@@ -571,7 +792,10 @@ function resetArchive() {
                 button.dataset.type;
 
 
-            if (!value || value === "all") {
+            if (
+                !value ||
+                normalize(value) === "all"
+            ) {
 
                 button.classList.add(
                     "active"
@@ -587,9 +811,9 @@ function resetArchive() {
 }
 
 
-/* =====================================================
-   СЧЁТЧИК ЗАПИСЕЙ
-===================================================== */
+/* ===================================================== */
+/* СЧЁТЧИК ЗАПИСЕЙ */
+/* ===================================================== */
 
 function updateArchiveCounter() {
 
@@ -612,9 +836,9 @@ function updateArchiveCounter() {
 }
 
 
-/* =====================================================
-   ОШИБКА БАЗЫ
-===================================================== */
+/* ===================================================== */
+/* ОШИБКА БАЗЫ */
+/* ===================================================== */
 
 function showArchiveError() {
 
@@ -635,18 +859,22 @@ function showArchiveError() {
                 DATABASE ERROR
             </div>
 
+
             <h3>
                 НЕ УДАЛОСЬ ЗАГРУЗИТЬ АРХИВ
             </h3>
+
 
             <p>
                 Центральная база данных
                 A.S.I.S. временно недоступна.
             </p>
 
+
             <button
                 class="button primary"
-                onclick="location.reload()"
+                id="retryArchive"
+                type="button"
             >
                 ПОВТОРИТЬ ЗАПРОС
             </button>
@@ -655,12 +883,32 @@ function showArchiveError() {
 
     `;
 
+
+    const retryButton =
+        document.getElementById(
+            "retryArchive"
+        );
+
+
+    if (retryButton) {
+
+        retryButton.addEventListener(
+            "click",
+            () => {
+
+                loadArchive();
+
+            }
+        );
+
+    }
+
 }
 
 
-/* =====================================================
-   УРОВЕНЬ ОПАСНОСТИ
-===================================================== */
+/* ===================================================== */
+/* УРОВЕНЬ ОПАСНОСТИ */
+/* ===================================================== */
 
 function getDangerClass(danger) {
 
@@ -699,9 +947,9 @@ function getDangerClass(danger) {
 }
 
 
-/* =====================================================
-   НОРМАЛИЗАЦИЯ ТЕКСТА
-===================================================== */
+/* ===================================================== */
+/* НОРМАЛИЗАЦИЯ ТЕКСТА */
+/* ===================================================== */
 
 function normalize(value) {
 
@@ -714,9 +962,9 @@ function normalize(value) {
 }
 
 
-/* =====================================================
-   СОКРАЩЕНИЕ ОПИСАНИЯ
-===================================================== */
+/* ===================================================== */
+/* СОКРАЩЕНИЕ ОПИСАНИЯ */
+/* ===================================================== */
 
 function truncateText(
     text,
@@ -730,6 +978,10 @@ function truncateText(
     }
 
 
+    text =
+        String(text);
+
+
     if (
         text.length <= maxLength
     ) {
@@ -740,41 +992,51 @@ function truncateText(
 
 
     return (
-        text.substring(
-            0,
-            maxLength
-        ).trim()
+
+        text
+            .substring(
+                0,
+                maxLength
+            )
+            .trim()
+
         + "..."
+
     );
 
 }
 
 
-/* =====================================================
-   ЗАЩИТА HTML
-===================================================== */
+/* ===================================================== */
+/* ЗАЩИТА HTML */
+/* ===================================================== */
 
 function escapeHTML(value) {
 
     return String(
         value ?? ""
     )
+
         .replace(
             /&/g,
             "&amp;"
         )
+
         .replace(
             /</g,
             "&lt;"
         )
+
         .replace(
             />/g,
             "&gt;"
         )
+
         .replace(
             /"/g,
             "&quot;"
         )
+
         .replace(
             /'/g,
             "&#039;"
@@ -783,16 +1045,22 @@ function escapeHTML(value) {
 }
 
 
-/* =====================================================
-   A.S.I.S STATUS
-===================================================== */
+/* ===================================================== */
+/* A.S.I.S STATUS */
+/* ===================================================== */
 
 console.log(
     "%cA.S.I.S.",
     "color:#39D98A;font-size:24px;font-weight:bold"
 );
 
+
 console.log(
     "%cARCHIVE SURVIVAL INFORMATION SYSTEM",
     "color:#8A949F;font-size:12px"
 );
+
+
+/* ===================================================== */
+/* ГОТОВО */
+/* ===================================================== */
