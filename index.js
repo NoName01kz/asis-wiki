@@ -1,68 +1,142 @@
 /*
-=========================================================
+===========================================================
 A.S.I.S.
 Archive Survival Information System
 
 index.js
 Динамическая главная страница
-=========================================================
+
+Подключает:
+
+archive.json
+    ↓
+статистика
+популярные статьи
+случайное досье
+
+news.json
+    ↓
+последние новости
+===========================================================
 */
 
 document.addEventListener("DOMContentLoaded", () => {
-    loadIndexArchive();
+
+    loadIndexData();
+
 });
 
 
-/*
-=========================================================
-ГЛОБАЛЬНЫЕ ДАННЫЕ
-=========================================================
-*/
+/* =========================================================
+   ГЛОБАЛЬНЫЕ ДАННЫЕ
+========================================================= */
 
 let archive = [];
+let news = [];
 
 
-/*
-=========================================================
-ЗАГРУЗКА АРХИВА
-=========================================================
-*/
+/* =========================================================
+   ЗАГРУЗКА ВСЕХ ДАННЫХ
+========================================================= */
 
-async function loadIndexArchive() {
+async function loadIndexData() {
 
     try {
 
-        const response = await fetch("archive.json", {
-            cache: "no-store"
-        });
+        /*
+        Загружаем архив и новости одновременно.
+        */
 
-        if (!response.ok) {
+        const [archiveResponse, newsResponse] =
+            await Promise.all([
+                fetch("archive.json", {
+                    cache: "no-store"
+                }),
+
+                fetch("news.json", {
+                    cache: "no-store"
+                })
+            ]);
+
+
+        /* =================================================
+           ARCHIVE.JSON
+        ================================================= */
+
+        if (!archiveResponse.ok) {
+
             throw new Error(
-                `Ошибка загрузки archive.json: ${response.status}`
+                `Ошибка загрузки archive.json: ${archiveResponse.status}`
             );
+
         }
 
-        archive = await response.json();
+
+        archive = await archiveResponse.json();
+
 
         if (!Array.isArray(archive)) {
+
             throw new Error(
                 "archive.json должен содержать массив записей"
             );
+
         }
+
+
+        /* =================================================
+           NEWS.JSON
+        ================================================= */
+
+        if (newsResponse.ok) {
+
+            news = await newsResponse.json();
+
+
+            if (!Array.isArray(news)) {
+
+                console.warn(
+                    "news.json должен содержать массив записей"
+                );
+
+                news = [];
+
+            }
+
+        } else {
+
+            console.warn(
+                `news.json недоступен: ${newsResponse.status}`
+            );
+
+            news = [];
+
+        }
+
+
+        /* =================================================
+           СТАТУС
+        ================================================= */
 
         console.log(
             "%cA.S.I.S INDEX ONLINE",
             "color:#39D98A;font-size:18px;font-weight:bold"
         );
 
+
         console.log(
-            `Загружено записей: ${archive.length}`
+            `Загружено записей архива: ${archive.length}`
         );
 
 
-        /*
-        Обновляем главную страницу
-        */
+        console.log(
+            `Загружено новостей: ${news.length}`
+        );
+
+
+        /* =================================================
+           ОБНОВЛЕНИЕ ГЛАВНОЙ
+        ================================================= */
 
         updateStatistics();
 
@@ -70,12 +144,18 @@ async function loadIndexArchive() {
 
         renderRandomFile();
 
-    } catch (error) {
+        renderLatestNews();
+
+
+    }
+
+    catch (error) {
 
         console.error(
             "A.S.I.S INDEX DATABASE ERROR:",
             error
         );
+
 
         showIndexError();
 
@@ -84,29 +164,38 @@ async function loadIndexArchive() {
 }
 
 
-/*
-=========================================================
-СТАТИСТИКА
-=========================================================
-*/
+/* =========================================================
+   СТАТИСТИКА
+========================================================= */
 
 function updateStatistics() {
 
-    const total = archive.length;
+    const total =
+        archive.length;
 
-    const infected = countCategory("Заражённые");
 
-    const anomalies = countCategory("Аномалии");
+    const infected =
+        countCategory("Заражённые");
 
-    const locations = countCategory("Локации");
 
-    const npcs = countCategory("NPC");
+    const anomalies =
+        countCategory("Аномалии");
 
-    const factions = countCategory("Фракции");
+
+    const locations =
+        countCategory("Локации");
+
+
+    const npcs =
+        countCategory("NPC");
+
+
+    const factions =
+        countCategory("Фракции");
 
 
     /*
-    Общее количество
+    Основные ID.
     */
 
     setCounter(
@@ -119,10 +208,6 @@ function updateStatistics() {
     );
 
 
-    /*
-    Заражённые
-    */
-
     setCounter(
         [
             "infectedCount",
@@ -131,10 +216,6 @@ function updateStatistics() {
         infected
     );
 
-
-    /*
-    Аномалии
-    */
 
     setCounter(
         [
@@ -146,10 +227,6 @@ function updateStatistics() {
     );
 
 
-    /*
-    Локации
-    */
-
     setCounter(
         [
             "locationCount",
@@ -160,10 +237,6 @@ function updateStatistics() {
     );
 
 
-    /*
-    NPC
-    */
-
     setCounter(
         [
             "npcCount",
@@ -173,10 +246,6 @@ function updateStatistics() {
         npcs
     );
 
-
-    /*
-    Фракции
-    */
 
     setCounter(
         [
@@ -189,74 +258,12 @@ function updateStatistics() {
 
 
     /*
-    Поддержка data-stat
+    Поддержка data-stat.
+    Например:
+
+    <span data-stat="total"></span>
+    <span data-stat="infected"></span>
     */
-
-    updateDataStats();
-
-}
-
-
-/*
-=========================================================
-ПОДСЧЁТ КАТЕГОРИИ
-=========================================================
-*/
-
-function countCategory(category) {
-
-    const target = normalize(category);
-
-
-    return archive.filter(file => {
-
-        const fileCategory =
-            normalize(file.category);
-
-        const fileType =
-            normalize(file.type);
-
-
-        /*
-        NPC может быть записан
-        либо в type, либо в category.
-        */
-
-        if (target === "npc") {
-
-            return (
-                fileType === "npc" ||
-                fileCategory === "npc" ||
-                fileCategory === "персонажи"
-            );
-
-        }
-
-
-        return fileCategory === target;
-
-    }).length;
-
-}
-
-
-/*
-=========================================================
-DATA-STAT
-=========================================================
-
-Поддерживаются:
-
-data-stat="total"
-data-stat="infected"
-data-stat="anomaly"
-data-stat="location"
-data-stat="npc"
-data-stat="faction"
-=========================================================
-*/
-
-function updateDataStats() {
 
     document
         .querySelectorAll("[data-stat]")
@@ -273,11 +280,11 @@ function updateDataStats() {
 
             switch (stat) {
 
-                case "total":
                 case "all":
+                case "total":
                 case "archive":
 
-                    value = archive.length;
+                    value = total;
 
                     break;
 
@@ -285,10 +292,7 @@ function updateDataStats() {
                 case "infected":
                 case "зараженные":
 
-                    value =
-                        countCategory(
-                            "Заражённые"
-                        );
+                    value = infected;
 
                     break;
 
@@ -297,10 +301,7 @@ function updateDataStats() {
                 case "anomalies":
                 case "аномалии":
 
-                    value =
-                        countCategory(
-                            "Аномалии"
-                        );
+                    value = anomalies;
 
                     break;
 
@@ -309,55 +310,132 @@ function updateDataStats() {
                 case "locations":
                 case "локации":
 
-                    value =
-                        countCategory(
-                            "Локации"
-                        );
+                    value = locations;
 
                     break;
 
 
                 case "npc":
                 case "npcs":
+                case "персонажи":
 
-                    value =
-                        countCategory(
-                            "NPC"
-                        );
+                    value = npcs;
 
                     break;
 
 
                 case "faction":
                 case "factions":
+                case "фракции":
 
-                    value =
-                        countCategory(
-                            "Фракции"
-                        );
+                    value = factions;
 
                     break;
-
-
-                default:
-
-                    value = 0;
 
             }
 
 
-            element.textContent = value;
+            element.textContent =
+                value;
 
         });
 
 }
 
 
-/*
-=========================================================
-ПОПУЛЯРНЫЕ СТАТЬИ
-=========================================================
-*/
+/* =========================================================
+   ПОДСЧЁТ КАТЕГОРИИ
+========================================================= */
+
+function countCategory(category) {
+
+    const target =
+        normalize(category);
+
+
+    return archive.filter(file => {
+
+        const fileCategory =
+            normalize(file.category);
+
+
+        const fileType =
+            normalize(file.type);
+
+
+        /*
+        NPC:
+
+        type: NPC
+        category: Персонажи
+        */
+
+        if (target === "npc") {
+
+            return (
+                fileType === "npc" ||
+                fileCategory === "npc" ||
+                fileCategory === "персонажи"
+            );
+
+        }
+
+
+        /*
+        Фракции также проверяем по type.
+        */
+
+        if (target === "фракции") {
+
+            return (
+                fileCategory === "фракции" ||
+                fileType === "фракция"
+            );
+
+        }
+
+
+        /*
+        Остальные категории.
+        */
+
+        return (
+            fileCategory === target ||
+            fileType === target
+        );
+
+    }).length;
+
+}
+
+
+/* =========================================================
+   УСТАНОВКА СЧЁТЧИКОВ
+========================================================= */
+
+function setCounter(ids, value) {
+
+    ids.forEach(id => {
+
+        const element =
+            document.getElementById(id);
+
+
+        if (element) {
+
+            element.textContent =
+                value;
+
+        }
+
+    });
+
+}
+
+
+/* =========================================================
+   ПОПУЛЯРНЫЕ СТАТЬИ
+========================================================= */
 
 function renderPopularArticles() {
 
@@ -370,17 +448,13 @@ function renderPopularArticles() {
     if (!container) {
 
         console.warn(
-            "A.S.I.S: .popular-grid не найден"
+            "Элемент .popular-grid не найден"
         );
 
         return;
 
     }
 
-
-    /*
-    Если архив пуст
-    */
 
     if (archive.length === 0) {
 
@@ -406,11 +480,10 @@ function renderPopularArticles() {
 
 
     /*
-    Вес уровня угрозы.
+    Приоритет опасности.
 
-    Чем выше опасность,
-    тем выше запись будет
-    расположена среди популярных.
+    Чем выше danger —
+    тем выше статья в популярных.
     */
 
     const dangerWeight = {
@@ -463,11 +536,9 @@ function renderPopularArticles() {
 }
 
 
-/*
-=========================================================
-КАРТОЧКА ПОПУЛЯРНОЙ СТАТЬИ
-=========================================================
-*/
+/* =========================================================
+   КАРТОЧКА ПОПУЛЯРНОЙ СТАТЬИ
+========================================================= */
 
 function createPopularCard(file) {
 
@@ -562,11 +633,9 @@ function createPopularCard(file) {
 }
 
 
-/*
-=========================================================
-СЛУЧАЙНОЕ ДОСЬЕ
-=========================================================
-*/
+/* =========================================================
+   СЛУЧАЙНОЕ ДОСЬЕ
+========================================================= */
 
 function renderRandomFile() {
 
@@ -579,7 +648,7 @@ function renderRandomFile() {
     if (!randomContainer) {
 
         console.warn(
-            "A.S.I.S: .random-card не найден"
+            "Элемент .random-card не найден"
         );
 
         return;
@@ -588,12 +657,14 @@ function renderRandomFile() {
 
 
     if (archive.length === 0) {
+
         return;
+
     }
 
 
     /*
-    Выбираем случайную запись
+    Выбираем случайную запись.
     */
 
     const file =
@@ -622,12 +693,11 @@ function renderRandomFile() {
 
     const type =
         file.type ||
-        file.category ||
         "Архив";
 
 
     /*
-    Заголовок
+    Заголовок.
     */
 
     const title =
@@ -645,7 +715,7 @@ function renderRandomFile() {
 
 
     /*
-    Описание
+    Описание.
     */
 
     const text =
@@ -666,7 +736,7 @@ function renderRandomFile() {
 
 
     /*
-    Категория
+    Категория.
     */
 
     const category =
@@ -684,7 +754,7 @@ function renderRandomFile() {
 
 
     /*
-    Номер архива
+    Номер архива.
     */
 
     const number =
@@ -702,7 +772,7 @@ function renderRandomFile() {
 
 
     /*
-    Кнопка
+    Кнопка.
     */
 
     const button =
@@ -720,7 +790,7 @@ function renderRandomFile() {
 
 
     /*
-    Если внутри карточки есть изображение
+    Если есть изображение.
     */
 
     const image =
@@ -734,6 +804,7 @@ function renderRandomFile() {
         image.src =
             file.image;
 
+
         image.alt =
             name;
 
@@ -742,43 +813,392 @@ function renderRandomFile() {
 }
 
 
-/*
-=========================================================
-УНИВЕРСАЛЬНАЯ УСТАНОВКА СЧЁТЧИКА
-=========================================================
-*/
+/* =========================================================
+   ПОСЛЕДНИЕ НОВОСТИ
+========================================================= */
 
-function setCounter(ids, value) {
+function renderLatestNews() {
 
-    ids.forEach(id => {
-
-        const element =
-            document.getElementById(id);
+    const container =
+        document.querySelector(
+            ".news-grid"
+        );
 
 
-        if (element) {
+    if (!container) {
 
-            element.textContent =
-                value;
+        console.warn(
+            "Элемент .news-grid не найден"
+        );
+
+        return;
+
+    }
+
+
+    /*
+    Если news.json пустой.
+    */
+
+    if (news.length === 0) {
+
+        container.innerHTML = `
+
+            <div class="archive-empty">
+
+                <h3>
+                    НОВОСТЕЙ ПОКА НЕТ
+                </h3>
+
+                <p>
+                    Новостная база A.S.I.S.
+                    пока не содержит публикаций.
+                </p>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    /*
+    Сортировка по дате.
+    */
+
+    const sortedNews =
+        [...news]
+            .sort((a, b) => {
+
+                const dateA =
+                    parseNewsDate(
+                        a.date
+                    );
+
+
+                const dateB =
+                    parseNewsDate(
+                        b.date
+                    );
+
+
+                return dateB - dateA;
+
+            })
+            .slice(0, 3);
+
+
+    container.innerHTML = "";
+
+
+    sortedNews.forEach(
+        (item, index) => {
+
+            container.insertAdjacentHTML(
+                "beforeend",
+                createNewsCard(
+                    item,
+                    index === 0
+                )
+            );
 
         }
-
-    });
+    );
 
 }
 
 
-/*
-=========================================================
-ОШИБКА БАЗЫ ДАННЫХ
-=========================================================
-*/
+/* =========================================================
+   СОЗДАНИЕ НОВОСТИ
+========================================================= */
 
-function showIndexError() {
+function createNewsCard(
+    item,
+    featured = false
+) {
+
+    const title =
+        item.title ||
+        item.name ||
+        "Без названия";
+
+
+    const description =
+        item.description ||
+        item.text ||
+        "Описание отсутствует.";
+
+
+    const date =
+        item.date ||
+        "";
+
+
+    const id =
+        item.id ||
+        "";
+
+
+    const image =
+        item.image ||
+        "";
 
 
     /*
-    Data-stat
+    Ссылка на конкретную новость.
+
+    Если у новости есть link —
+    используем его.
+
+    Иначе:
+    news.html?id=...
+    */
+
+    const link =
+        item.link ||
+        (
+            id
+                ? `news.html?id=${encodeURIComponent(id)}`
+                : "news.html"
+        );
+
+
+    /*
+    Для первой новости
+    добавляем featured.
+    */
+
+    const classes =
+        featured
+            ? "news-card featured"
+            : "news-card";
+
+
+    /*
+    Если у новости есть изображение,
+    первая карточка получает его как фон.
+    */
+
+    let style = "";
+
+
+    if (featured && image) {
+
+        style = `
+
+            style="
+                background:
+                linear-gradient(
+                    rgba(0,0,0,.2),
+                    rgba(0,0,0,.85)
+                ),
+                url('${escapeCSSURL(image)}');
+
+                background-size:cover;
+                background-position:center;
+            "
+
+        `;
+
+    }
+
+
+    return `
+
+        <article
+            class="${classes}"
+            ${style}
+        >
+
+            <span class="news-date">
+
+                ${escapeHTML(
+                    formatNewsDate(date)
+                )}
+
+            </span>
+
+
+            <h3>
+
+                ${escapeHTML(title)}
+
+            </h3>
+
+
+            <p>
+
+                ${escapeHTML(
+                    truncateText(
+                        description,
+                        180
+                    )
+                )}
+
+            </p>
+
+
+            <a href="${escapeHTML(link)}">
+
+                Читать →
+
+            </a>
+
+        </article>
+
+    `;
+
+}
+
+
+/* =========================================================
+   РАЗБОР ДАТЫ НОВОСТИ
+========================================================= */
+
+function parseNewsDate(date) {
+
+    if (!date) {
+
+        return 0;
+
+    }
+
+
+    /*
+    YYYY-MM-DD
+    */
+
+    const parsed =
+        Date.parse(
+            String(date)
+        );
+
+
+    if (!Number.isNaN(parsed)) {
+
+        return parsed;
+
+    }
+
+
+    /*
+    DD.MM.YYYY
+    */
+
+    const parts =
+        String(date).split(".");
+
+
+    if (parts.length === 3) {
+
+        const day =
+            Number(parts[0]);
+
+
+        const month =
+            Number(parts[1]) - 1;
+
+
+        const year =
+            Number(parts[2]);
+
+
+        return new Date(
+            year,
+            month,
+            day
+        ).getTime();
+
+    }
+
+
+    return 0;
+
+}
+
+
+/* =========================================================
+   ФОРМАТИРОВАНИЕ ДАТЫ
+========================================================= */
+
+function formatNewsDate(date) {
+
+    if (!date) {
+
+        return "";
+
+    }
+
+
+    /*
+    Если уже DD.MM.YYYY —
+    оставляем как есть.
+    */
+
+    if (
+        /^\d{2}\.\d{2}\.\d{4}$/
+            .test(
+                String(date)
+            )
+    ) {
+
+        return date;
+
+    }
+
+
+    const parsed =
+        parseNewsDate(date);
+
+
+    if (!parsed) {
+
+        return String(date);
+
+    }
+
+
+    const d =
+        new Date(parsed);
+
+
+    const day =
+        String(
+            d.getDate()
+        ).padStart(
+            2,
+            "0"
+        );
+
+
+    const month =
+        String(
+            d.getMonth() + 1
+        ).padStart(
+            2,
+            "0"
+        );
+
+
+    const year =
+        d.getFullYear();
+
+
+    return `${day}.${month}.${year}`;
+
+}
+
+
+/* =========================================================
+   ОШИБКА БАЗЫ
+========================================================= */
+
+function showIndexError() {
+
+    /*
+    Счётчики.
     */
 
     document
@@ -787,60 +1207,53 @@ function showIndexError() {
         )
         .forEach(element => {
 
-            element.textContent = "—";
+            element.textContent =
+                "—";
 
         });
 
 
     /*
-    Стандартные ID счётчиков
+    Также сбрасываем основные ID.
     */
 
-    const counterIds = [
-
+    [
         "archiveCount",
         "totalCount",
         "totalArticles",
-
         "infectedCount",
         "infectedArticles",
-
         "anomalyCount",
         "anomaliesCount",
         "anomalyArticles",
-
         "locationCount",
         "locationsCount",
         "locationArticles",
-
         "npcCount",
         "npcsCount",
         "npcArticles",
-
         "factionCount",
         "factionsCount",
         "factionArticles"
+    ]
+        .forEach(id => {
 
-    ];
-
-
-    counterIds.forEach(id => {
-
-        const element =
-            document.getElementById(id);
+            const element =
+                document.getElementById(id);
 
 
-        if (element) {
+            if (element) {
 
-            element.textContent = "—";
+                element.textContent =
+                    "—";
 
-        }
+            }
 
-    });
+        });
 
 
     /*
-    Популярные статьи
+    Популярные статьи.
     */
 
     const popular =
@@ -856,18 +1269,24 @@ function showIndexError() {
             <div class="archive-error">
 
                 <div class="archive-error-code">
+
                     DATABASE ERROR
+
                 </div>
 
 
                 <h3>
+
                     НЕ УДАЛОСЬ ЗАГРУЗИТЬ АРХИВ
+
                 </h3>
 
 
                 <p>
+
                     Центральная база данных
                     A.S.I.S. временно недоступна.
+
                 </p>
 
 
@@ -876,7 +1295,9 @@ function showIndexError() {
                     type="button"
                     onclick="location.reload()"
                 >
+
                     ПОВТОРИТЬ ЗАПРОС
+
                 </button>
 
             </div>
@@ -888,11 +1309,9 @@ function showIndexError() {
 }
 
 
-/*
-=========================================================
-НОРМАЛИЗАЦИЯ
-=========================================================
-*/
+/* =========================================================
+   НОРМАЛИЗАЦИЯ
+========================================================= */
 
 function normalize(value) {
 
@@ -905,30 +1324,41 @@ function normalize(value) {
 }
 
 
-/*
-=========================================================
-СОКРАЩЕНИЕ ТЕКСТА
-=========================================================
-*/
+/* =========================================================
+   СОКРАЩЕНИЕ ТЕКСТА
+========================================================= */
 
-function truncateText(text, maxLength) {
+function truncateText(
+    text,
+    maxLength
+) {
 
     if (!text) {
+
         return "";
+
     }
 
 
-    text = String(text);
+    text =
+        String(text);
 
 
-    if (text.length <= maxLength) {
+    if (
+        text.length <= maxLength
+    ) {
+
         return text;
+
     }
 
 
     return (
         text
-            .substring(0, maxLength)
+            .substring(
+                0,
+                maxLength
+            )
             .trim()
         + "..."
     );
@@ -936,56 +1366,73 @@ function truncateText(text, maxLength) {
 }
 
 
-/*
-=========================================================
-ЗАЩИТА HTML
-=========================================================
-*/
+/* =========================================================
+   ЗАЩИТА HTML
+========================================================= */
 
 function escapeHTML(value) {
 
     return String(
         value ?? ""
     )
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
 
 }
 
 
-/*
-=========================================================
-ЗАЩИТА URL ДЛЯ BACKGROUND-IMAGE
-=========================================================
-*/
+/* =========================================================
+   ЗАЩИТА URL ДЛЯ CSS
+========================================================= */
 
 function escapeCSSURL(value) {
 
     return String(
         value ?? ""
     )
-        .replace(/\\/g, "\\\\")
-        .replace(/'/g, "\\'")
-        .replace(/"/g, '\\"')
-        .replace(/\(/g, "\\(")
-        .replace(/\)/g, "\\)");
+        .replace(
+            /\\/g,
+            "\\\\"
+        )
+        .replace(
+            /'/g,
+            "\\'"
+        )
+        .replace(
+            /"/g,
+            '\\"'
+        );
 
 }
 
 
-/*
-=========================================================
-A.S.I.S STATUS
-=========================================================
-*/
+/* =========================================================
+   A.S.I.S STATUS
+========================================================= */
 
 console.log(
     "%cA.S.I.S.",
     "color:#39D98A;font-size:24px;font-weight:bold"
 );
+
 
 console.log(
     "%cARCHIVE SURVIVAL INFORMATION SYSTEM",
