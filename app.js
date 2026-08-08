@@ -15,7 +15,8 @@ document.addEventListener("DOMContentLoaded", () => {
     initCounters();
 
     initRandomFile();
-
+    
+initPopularArticles();
     initHeader();
 
 });
@@ -520,3 +521,161 @@ const ASIS = {
 /* ========================================= */
 /* ГОТОВО */
 /* ========================================= */
+
+/* ========================================= */
+/* ПОПУЛЯРНЫЕ СТАТЬИ */
+/* ========================================= */
+
+async function initPopularArticles() {
+
+    const grid =
+        document.getElementById("popularGrid");
+
+    if (!grid) return;
+
+
+    try {
+
+        const response =
+            await fetch("archive.json", {
+                cache: "no-store"
+            });
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Не удалось загрузить archive.json"
+            );
+
+        }
+
+
+        const archive =
+            await response.json();
+
+
+        if (
+            !Array.isArray(archive) ||
+            archive.length === 0
+        ) {
+
+            return;
+
+        }
+
+
+        /*
+        Пока показываем первые 3 записи
+        из архива.
+
+        Позже здесь можно подключить
+        Firebase и сортировать статьи
+        по количеству просмотров.
+        */
+
+        const popular =
+            archive.slice(0, 3);
+
+
+        grid.innerHTML = "";
+
+
+        popular.forEach(file => {
+
+            const image =
+                file.image || "";
+
+
+            const description =
+                file.description ||
+                "Описание объекта отсутствует.";
+
+
+            const card = document.createElement("article");
+
+            card.className =
+                "popular-card";
+
+
+            card.innerHTML = `
+
+                <div class="popular-image">
+
+                    ${
+                        image
+                        ? `
+                            <img
+                                src="${escapeHTML(image)}"
+                                alt="${escapeHTML(file.name)}"
+                                loading="lazy"
+                                onerror="this.style.display='none'"
+                            >
+                          `
+                        : ""
+                    }
+
+                </div>
+
+
+                <div class="popular-content">
+
+                    <span class="popular-type">
+                        ${escapeHTML(
+                            file.type || "АРХИВ"
+                        )}
+                    </span>
+
+
+                    <h3>
+                        ${escapeHTML(
+                            file.name || "Без названия"
+                        )}
+                    </h3>
+
+
+                    <p>
+                        ${escapeHTML(
+                            truncateText(
+                                description,
+                                140
+                            )
+                        )}
+                    </p>
+
+
+                    <a
+                        href="file.html?id=${encodeURIComponent(
+                            file.id
+                        )}"
+                        class="button secondary"
+                    >
+                        ОТКРЫТЬ ДОСЬЕ
+                    </a>
+
+                </div>
+
+            `;
+
+
+            grid.appendChild(card);
+
+        });
+
+
+        console.log(
+            "%cA.S.I.S POPULAR ARTICLES ONLINE",
+            "color:#39D98A;font-size:16px;font-weight:bold"
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "A.S.I.S POPULAR ARTICLES ERROR:",
+            error
+        );
+
+    }
+
+}
