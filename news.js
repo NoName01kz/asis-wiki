@@ -951,7 +951,7 @@ function updateStatistics() {
 
                     case "updates":
                     case "update":
-                    case "обновления":
+                    case "Обновления":
 
                         value =
                             updates;
@@ -961,7 +961,7 @@ function updateStatistics() {
 
                     case "events":
                     case "event":
-                    case "события":
+                    case "События":
 
                         value =
                             events;
@@ -970,7 +970,7 @@ function updateStatistics() {
 
 
                     case "archive":
-                    case "архив":
+                    case "Архив":
 
                         value =
                             archiveNews;
