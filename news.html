@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="description"
+        content="Новости A.S.I.S. — Archive Survival Information System">
+
+    <title>
+        Новости — A.S.I.S.
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="style.css">
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     LOADER
+===================================================== -->
+
+<div id="loader">
+
+    <div class="loader-content">
+
+        <img
+            src="logo.svg"
+            alt="A.S.I.S."
+            class="loader-logo">
+
+        <h1>
+            A.S.I.S.
+        </h1>
+
+        <p>
+            Archive Survival Information System
+        </p>
+
+        <div class="loader-progress">
+
+            <div class="loader-bar"></div>
+
+        </div>
+
+        <span>
+            ЗАГРУЗКА НОВОСТЕЙ...
+        </span>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
+<header class="header">
+
+    <div class="container">
+
+
+        <a
+            href="index.html"
+            class="logo">
+
+            <img
+                src="logo.svg"
+                alt="A.S.I.S.">
+
+            <div>
+
+                <h2>
+                    A.S.I.S.
+                </h2>
+
+                <small>
+                    Archive Survival Information System
+                </small>
+
+            </div>
+
+        </a>
+
+
+        <!-- NAVIGATION -->
+
+        <nav class="navigation">
+
+            <a
+                href="index.html">
+
+                Главная
+
+            </a>
+
+
+            <a
+                href="encyclopedia.html">
+
+                Энциклопедия
+
+            </a>
+
+
+            <a
+                href="map.html">
+
+                Карта
+
+            </a>
+
+
+            <a
+                href="news.html"
+                class="active">
+
+                Новости
+
+            </a>
+
+
+            <a
+                href="community.html">
+
+                Сообщество
+
+            </a>
+
+        </nav>
+
+
+        <!-- HEADER RIGHT -->
+
+        <div class="header-right">
+
+
+            <div class="search-box">
+
+                <input
+                    id="newsSearch"
+                    type="text"
+                    placeholder="Поиск новостей...">
+
+            </div>
+
+
+            <a
+                href="login.html"
+                class="login-button">
+
+                Войти
+
+            </a>
+
+        </div>
+
+
+        <!-- MOBILE -->
+
+        <button
+            class="mobile-menu"
+            type="button"
+            aria-label="Открыть меню">
+
+            ☰
+
+        </button>
+
+
+    </div>
+
+</header>
+
+
+
+<!-- =====================================================
+     NEWS HERO
+===================================================== -->
+
+<section class="encyclopedia-hero news-hero">
+
+    <div class="container">
+
+
+        <span class="hero-tag">
+
+            A.S.I.S. NEWS NETWORK
+
+        </span>
+
+
+        <h1>
+
+            Новости
+
+        </h1>
+
+
+        <p>
+
+            Последние события, обновления архива,
+            сообщения разведывательных групп,
+            обнаруженные территории и важные события
+            мира A.S.I.S.
+
+        </p>
+
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     NEWS CONTROL
+===================================================== -->
+
+<section class="archive-control">
+
+    <div class="container">
+
+
+        <div class="archive-panel glass">
+
+
+            <h2>
+
+                Центр новостей
+
+            </h2>
+
+
+            <div class="archive-search">
+
+                <input
+                    id="newsSearchMain"
+                    type="text"
+                    placeholder="Поиск по новостям...">
+
+            </div>
+
+
+            <div
+                class="archive-filters"
+                id="newsFilters">
+
+
+                <button
+                    type="button"
+                    class="filter active"
+                    data-category="all">
+
+                    Все
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="filter"
+                    data-category="Обновления">
+
+                    Обновления
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="filter"
+                    data-category="События">
+
+                    События
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="filter"
+                    data-category="Аномалии">
+
+                    Аномалии
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="filter"
+                    data-category="Исследования">
+
+                    Исследования
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="filter"
+                    data-category="Архив">
+
+                    Архив
+
+                </button>
+
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     NEWS STATISTICS
+===================================================== -->
+
+<section class="site-stats news-stats">
+
+    <div class="container">
+
+
+        <div class="stats-grid">
+
+
+            <div class="site-card">
+
+                <h2 id="newsCount">
+                    —
+                </h2>
+
+                <span>
+                    Новостей
+                </span>
+
+            </div>
+
+
+            <div class="site-card">
+
+                <h2 id="updateCount">
+                    —
+                </h2>
+
+                <span>
+                    Обновлений
+                </span>
+
+            </div>
+
+
+            <div class="site-card">
+
+                <h2 id="eventCount">
+                    —
+                </h2>
+
+                <span>
+                    Событий
+                </span>
+
+            </div>
+
+
+            <div class="site-card">
+
+                <h2 id="archiveNewsCount">
+                    —
+                </h2>
+
+                <span>
+                    Архивных записей
+                </span>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     FEATURED NEWS
+===================================================== -->
+
+<section class="news">
+
+    <div class="container">
+
+
+        <div class="section-header">
+
+            <h2>
+                Главное событие
+            </h2>
+
+        </div>
+
+
+        <div
+            id="featuredNews"
+            class="news-grid">
+
+
+            <!--
+
+                news.js автоматически
+                вставит главную новость сюда.
+
+            -->
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     ALL NEWS
+===================================================== -->
+
+<section class="database">
+
+    <div class="container">
+
+
+        <div class="section-header">
+
+
+            <h2>
+                Последние новости
+            </h2>
+
+
+            <span
+                id="newsResultsCount"
+                class="section-link">
+
+                Загрузка...
+
+            </span>
+
+
+        </div>
+
+
+        <div
+            id="newsGrid"
+            class="archive-grid">
+
+
+            <!--
+
+                news.js автоматически
+                создаст карточки новостей.
+
+            -->
+
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     EMPTY STATE
+===================================================== -->
+
+<section
+    id="newsEmpty"
+    class="database"
+    style="display:none;">
+
+    <div class="container">
+
+
+        <div
+            class="archive-panel glass"
+            style="text-align:center;">
+
+
+            <div
+                class="archive-error-code">
+
+                NO RESULTS
+
+            </div>
+
+
+            <h2>
+
+                Новости не найдены
+
+            </h2>
+
+
+            <p
+                style="
+                    color:var(--text-light);
+                    margin-top:15px;
+                    line-height:1.8;
+                ">
+
+                По вашему запросу не найдено
+                ни одной записи в базе новостей A.S.I.S.
+
+            </p>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer class="footer">
+
+    <div class="container">
+
+
+        <div class="footer-grid">
+
+
+            <!-- ABOUT -->
+
+            <div>
+
+
+                <img
+                    src="logo.svg"
+                    alt="A.S.I.S."
+                    class="footer-logo">
+
+
+                <h2>
+                    A.S.I.S.
+                </h2>
+
+
+                <p>
+
+                    Archive Survival Information System
+
+                </p>
+
+
+                <p
+                    style="margin-top:15px;">
+
+                    Архив выживших.
+                    Система хранения и распространения
+                    информации о мире после катастрофы.
+
+                </p>
+
+
+            </div>
+
+
+
+            <!-- NAVIGATION -->
+
+            <div>
+
+
+                <h3>
+                    Навигация
+                </h3>
+
+
+                <ul>
+
+
+                    <li>
+
+                        <a href="index.html">
+                            Главная
+                        </a>
+
+                    </li>
+
+
+                    <li>
+
+                        <a href="encyclopedia.html">
+                            Энциклопедия
+                        </a>
+
+                    </li>
+
+
+                    <li>
+
+                        <a href="map.html">
+                            Карта
+                        </a>
+
+                    </li>
+
+
+                    <li>
+
+                        <a href="news.html">
+                            Новости
+                        </a>
+
+                    </li>
+
+
+                </ul>
+
+            </div>
+
+
+
+            <!-- COMMUNITY -->
+
+            <div>
+
+
+                <h3>
+                    Сообщество
+                </h3>
+
+
+                <ul>
+
+
+                    <li>
+
+                        <a href="community.html">
+                            Сообщество
+                        </a>
+
+                    </li>
+
+
+                    <li>
+
+                        <a href="login.html">
+                            Войти
+                        </a>
+
+                    </li>
+
+
+                    <li>
+
+                        <a href="#">
+                            Предложить материал
+                        </a>
+
+                    </li>
+
+
+                </ul>
+
+            </div>
+
+
+        </div>
+
+
+
+        <div class="copyright">
+
+            © 2026 A.S.I.S.
+            Все права защищены.
+
+        </div>
+
+
+    </div>
+
+</footer>
+
+
+
+<!-- =====================================================
+     JAVASCRIPT
+===================================================== -->
+
+<script src="news.js"></script>
+
+
+<!-- =====================================================
+     LOADER SCRIPT
+===================================================== -->
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+        const loader =
+            document.getElementById("loader");
+
+
+        if (!loader) {
+            return;
+        }
+
+
+        setTimeout(
+            () => {
+
+                loader.style.opacity = "0";
+
+                loader.style.transition =
+                    "opacity .5s ease";
+
+
+                setTimeout(
+                    () => {
+
+                        loader.style.display =
+                            "none";
+
+                    },
+                    500
+                );
+
+            },
+            700
+        );
+
+    }
+);
+
+</script>
+
+
+</body>
+
+</html>
