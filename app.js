@@ -194,49 +194,146 @@ function initCounters() {
 /* СЛУЧАЙНОЕ ДОСЬЕ */
 /* ========================================= */
 
-function initRandomFile() {
+/* ========================================= */
+/* СЛУЧАЙНОЕ ДОСЬЕ */
+/* ========================================= */
 
-    const title = document.querySelector(".random-left h2");
-    const text = document.querySelector(".random-left p");
+async function initRandomFile() {
+
+    const title =
+        document.querySelector(".random-left h2");
+
+    const text =
+        document.querySelector(".random-left p");
+
+    const button =
+        document.querySelector(".random-left .button");
+
+    const archiveNumber =
+        document.querySelector(".random-card .archive-number");
+
 
     if (!title || !text) return;
 
-    const files = [
 
-        {
-            title: "Объект №043 — «Пожиратель»",
-            text: "Один из самых опасных заражённых. Отличается высокой скоростью, невероятной силой и агрессивным поведением."
-        },
+    try {
 
-        {
-            title: "Объект №018 — «Мясник»",
-            text: "Крупный мутант, способный выдерживать огромный урон. Крайне опасен при ближнем контакте."
-        },
+        const response =
+            await fetch("archive.json", {
+                cache: "no-store"
+            });
 
-        {
-            title: "Аномалия — Красный туман",
-            text: "Неизученная аномальная зона. Длительное пребывание приводит к мутациям и психическим нарушениям."
-        },
 
-        {
-            title: "Локация — Город Нова",
-            text: "Когда-то крупнейший город региона. Сейчас практически полностью находится под контролем заражённых."
-        },
+        if (!response.ok) {
 
-        {
-            title: "Фракция — Военные",
-            text: "Остатки регулярной армии. Контролируют укреплённые базы и проводят экспедиции."
+            throw new Error(
+                "Не удалось загрузить archive.json"
+            );
+
         }
 
-    ];
 
-    const random = files[Math.floor(Math.random() * files.length)];
+        const archive =
+            await response.json();
 
-    title.textContent = random.title;
-    text.textContent = random.text;
+
+        if (
+            !Array.isArray(archive) ||
+            archive.length === 0
+        ) {
+
+            throw new Error(
+                "Архив пуст"
+            );
+
+        }
+
+
+        /* -----------------------------------------
+           ВЫБИРАЕМ СЛУЧАЙНУЮ ЗАПИСЬ
+        ----------------------------------------- */
+
+        const random =
+            archive[
+                Math.floor(
+                    Math.random() * archive.length
+                )
+            ];
+
+
+        /* -----------------------------------------
+           НАЗВАНИЕ
+        ----------------------------------------- */
+
+        title.textContent =
+            `Объект ${random.id} — «${random.name}»`;
+
+
+        /* -----------------------------------------
+           ОПИСАНИЕ
+        ----------------------------------------- */
+
+        text.textContent =
+            random.description ||
+            "Описание объекта отсутствует.";
+
+
+        /* -----------------------------------------
+           НОМЕР ДОСЬЕ
+        ----------------------------------------- */
+
+        if (archiveNumber) {
+
+            const number =
+                String(random.id || "")
+                    .replace(/^AS-/i, "");
+
+            archiveNumber.textContent =
+                number.padStart(3, "0");
+
+        }
+
+
+        /* -----------------------------------------
+           КНОПКА
+        ----------------------------------------- */
+
+        if (button) {
+
+            button.href =
+                `file.html?id=${encodeURIComponent(
+                    random.id
+                )}`;
+
+            button.textContent =
+                "Открыть досье";
+
+        }
+
+
+        console.log(
+            "%cA.S.I.S RANDOM DOSSIER",
+            "color:#39D98A;font-size:16px;font-weight:bold",
+            random
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "A.S.I.S RANDOM DOSSIER ERROR:",
+            error
+        );
+
+        /*
+        Если archive.json недоступен,
+        существующее содержимое HTML
+        останется на месте.
+        */
+
+    }
 
 }
-
 /* ========================================= */
 /* МОБИЛЬНОЕ МЕНЮ */
 /* ========================================= */
