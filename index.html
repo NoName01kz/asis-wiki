@@ -3,62 +3,50 @@
 
 <head>
 
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
 
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-<meta name="theme-color"
-content="#0d1117">
+    <meta
+        name="description"
+        content="A.S.I.S. — Archive Survival Information System. Энциклопедия и архив мира."
+    >
 
-<meta
-name="description"
-content="A.S.I.S. — Archive Survival Information System">
+    <title>
+        A.S.I.S. — Archive Survival Information System
+    </title>
 
-<title>
-A.S.I.S. | Архив Выживших
-</title>
-
-<link
-rel="preconnect"
-href="https://fonts.googleapis.com">
-
-<link
-rel="preconnect"
-href="https://fonts.gstatic.com"
-crossorigin>
-
-<link
-href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
-rel="stylesheet">
-
-<link
-rel="stylesheet"
-href="style.css">
-
-<link
-rel="icon"
-href="logo.svg"
-type="image/svg+xml">
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
 
 </head>
 
+
 <body>
 
-<!-- ========================= -->
-<!-- ЗАГРУЗОЧНЫЙ ЭКРАН -->
-<!-- ========================= -->
+
+<!-- =====================================================
+     LOADER
+===================================================== -->
 
 <div id="loader">
 
     <div class="loader-content">
 
         <img
-        src="logo.svg"
-        alt="A.S.I.S."
-        class="loader-logo">
+            src="logo.svg"
+            alt="A.S.I.S."
+            class="loader-logo"
+        >
 
-        <h1>A.S.I.S.</h1>
+        <h1>
+            A.S.I.S.
+        </h1>
 
         <p>
             Archive Survival Information System
@@ -78,24 +66,30 @@ type="image/svg+xml">
 
 </div>
 
-<!-- ========================= -->
-<!-- HEADER -->
-<!-- ========================= -->
+
+<!-- =====================================================
+     HEADER
+===================================================== -->
 
 <header class="header">
 
     <div class="container">
 
-        <a href="index.html"
-           class="logo">
+        <a
+            href="index.html"
+            class="logo"
+        >
 
             <img
-            src="logo.svg"
-            alt="A.S.I.S.">
+                src="logo.svg"
+                alt="A.S.I.S."
+            >
 
             <div>
 
-                <h2>A.S.I.S.</h2>
+                <h2>
+                    A.S.I.S.
+                </h2>
 
                 <small>
                     Archive Survival Information System
@@ -105,11 +99,14 @@ type="image/svg+xml">
 
         </a>
 
+
         <nav class="navigation">
 
-            <a class="active"
-               href="index.html">
-               Главная
+            <a
+                class="active"
+                href="index.html"
+            >
+                Главная
             </a>
 
             <a href="encyclopedia.html">
@@ -130,46 +127,51 @@ type="image/svg+xml">
 
         </nav>
 
+
         <div class="header-right">
 
             <div class="search-box">
 
                 <input
-                type="text"
-                placeholder="Поиск по архиву...">
+                    type="text"
+                    placeholder="Поиск по архиву..."
+                    id="headerSearch"
+                >
 
             </div>
 
+
             <a
-            href="login.html"
-            class="login-button">
-
+                href="login.html"
+                class="login-button"
+            >
                 Войти
-
             </a>
 
         </div>
 
+
         <button
-        class="mobile-menu">
-
+            class="mobile-menu"
+            type="button"
+            aria-label="Открыть меню"
+        >
             ☰
-
         </button>
 
     </div>
 
 </header>
 
-<!-- ========================= -->
-<!-- HERO -->
-<!-- ========================= -->
 
-<main>
+<!-- =====================================================
+     HERO
+===================================================== -->
 
 <section class="hero">
 
     <div class="hero-overlay"></div>
+
 
     <div class="container hero-content">
 
@@ -179,11 +181,13 @@ type="image/svg+xml">
 
         </span>
 
+
         <h1>
 
             АРХИВ ВЫЖИВШИХ
 
         </h1>
+
 
         <p>
 
@@ -195,19 +199,23 @@ type="image/svg+xml">
 
         </p>
 
+
         <div class="hero-buttons">
 
             <a
-            href="encyclopedia.html"
-            class="button primary">
+                href="encyclopedia.html"
+                class="button primary"
+            >
 
                 Открыть Архив
 
             </a>
 
+
             <a
-            href="map.html"
-            class="button secondary">
+                href="map.html"
+                class="button secondary"
+            >
 
                 Карта мира
 
@@ -215,55 +223,91 @@ type="image/svg+xml">
 
         </div>
 
-              <div class="hero-stats">
+
+        <!-- =================================================
+             ДИНАМИЧЕСКАЯ СТАТИСТИКА
+        ================================================= -->
+
+        <div class="hero-stats">
+
 
             <div class="stat-card">
 
-                <h2>286</h2>
+                <h2 id="totalArticles">
+                    0
+                </h2>
 
-                <span>Статей</span>
+                <span>
+                    Статей
+                </span>
 
             </div>
+
 
             <div class="stat-card">
 
-                <h2>84</h2>
+                <h2 id="locationCount">
+                    0
+                </h2>
 
-                <span>Локации</span>
+                <span>
+                    Локации
+                </span>
 
             </div>
+
 
             <div class="stat-card">
 
-                <h2>48</h2>
+                <h2 id="infectedCount">
+                    0
+                </h2>
 
-                <span>Заражённые</span>
+                <span>
+                    Заражённые
+                </span>
 
             </div>
+
 
             <div class="stat-card">
 
-                <h2>19</h2>
+                <h2 id="anomalyCount">
+                    0
+                </h2>
 
-                <span>Аномалии</span>
+                <span>
+                    Аномалии
+                </span>
 
             </div>
+
 
             <div class="stat-card">
 
-                <h2>12</h2>
+                <h2 id="factionCount">
+                    0
+                </h2>
 
-                <span>Фракции</span>
+                <span>
+                    Фракции
+                </span>
 
             </div>
+
 
             <div class="stat-card">
 
-                <h2>82</h2>
+                <h2 id="questCount">
+                    0
+                </h2>
 
-                <span>Квесты</span>
+                <span>
+                    Квесты
+                </span>
 
             </div>
+
 
         </div>
 
@@ -271,9 +315,10 @@ type="image/svg+xml">
 
 </section>
 
-<!-- ========================= -->
-<!-- ОПЕРАТИВНАЯ СВОДКА -->
-<!-- ========================= -->
+
+<!-- =====================================================
+     ОПЕРАТИВНАЯ СВОДКА
+===================================================== -->
 
 <section class="briefing">
 
@@ -282,24 +327,21 @@ type="image/svg+xml">
         <div class="briefing-card">
 
             <div class="briefing-icon">
-
                 ⚠
-
             </div>
+
 
             <div class="briefing-content">
 
                 <span>
-
                     ОПЕРАТИВНАЯ СВОДКА
-
                 </span>
 
+
                 <h2>
-
                     Последнее обновление архива
-
                 </h2>
+
 
                 <p>
 
@@ -312,8 +354,11 @@ type="image/svg+xml">
 
             </div>
 
-            <a href="news.html"
-               class="button secondary">
+
+            <a
+                href="news.html"
+                class="button secondary"
+            >
 
                 Подробнее
 
@@ -325,148 +370,168 @@ type="image/svg+xml">
 
 </section>
 
-<!-- ========================= -->
-<!-- ОСНОВНЫЕ РАЗДЕЛЫ -->
-<!-- ========================= -->
+
+<!-- =====================================================
+     ОСНОВНЫЕ РАЗДЕЛЫ
+===================================================== -->
 
 <section class="sections">
 
-<div class="container">
+    <div class="container">
 
-<h2 class="section-title">
+        <h2 class="section-title">
+            Основные разделы
+        </h2>
 
-Основные разделы
 
-</h2>
+        <div class="section-grid">
 
-<div class="section-grid">
 
-<a
-href="encyclopedia.html"
-class="section-card">
+            <!-- ЭНЦИКЛОПЕДИЯ -->
 
-<div class="section-icon">
+            <a
+                href="encyclopedia.html"
+                class="section-card"
+            >
 
-📖
+                <div class="section-icon">
+                    📖
+                </div>
 
-</div>
 
-<h3>
+                <h3>
+                    Энциклопедия
+                </h3>
 
-Энциклопедия
 
-</h3>
+                <p>
 
-<p>
+                    Все статьи, существа, предметы,
+                    аномалии, персонажи и история мира.
 
-Все статьи, существа, предметы,
-аномалии, персонажи и история мира.
+                </p>
 
-</p>
+            </a>
 
-</a>
 
-<a
-href="map.html"
-class="section-card">
+            <!-- КАРТА -->
 
-<div class="section-icon">
+            <a
+                href="map.html"
+                class="section-card"
+            >
 
-🗺
+                <div class="section-icon">
+                    🗺
+                </div>
 
-</div>
 
-<h3>
+                <h3>
+                    Интерактивная карта
+                </h3>
 
-Интерактивная карта
 
-</h3>
+                <p>
 
-<p>
+                    Исследуйте все доступные
+                    локации игрового мира.
 
-Исследуйте все доступные
-локации игрового мира.
+                </p>
 
-</p>
+            </a>
 
-</a>
 
-<a
-href="news.html"
-class="section-card">
+            <!-- НОВОСТИ -->
 
-<div class="section-icon">
+            <a
+                href="news.html"
+                class="section-card"
+            >
 
-📰
+                <div class="section-icon">
+                    📰
+                </div>
 
-</div>
 
-<h3>
+                <h3>
+                    Новости
+                </h3>
 
-Новости
 
-</h3>
+                <p>
 
-<p>
+                    Следите за обновлениями,
+                    ивентами и изменениями игры.
 
-Следите за обновлениями,
-ивентами и изменениями игры.
+                </p>
 
-</p>
+            </a>
 
-</a>
 
-<a
-href="community.html"
-class="section-card">
+            <!-- СООБЩЕСТВО -->
 
-<div class="section-icon">
+            <a
+                href="community.html"
+                class="section-card"
+            >
 
-👥
+                <div class="section-icon">
+                    👥
+                </div>
 
-</div>
 
-<h3>
+                <h3>
+                    Сообщество
+                </h3>
 
-Сообщество
 
-</h3>
+                <p>
 
-<p>
+                    Комментарии,
+                    обсуждения,
+                    дневники выживших
+                    и предложения игроков.
 
-Комментарии,
-обсуждения,
-дневники выживших
-и предложения игроков.
+                </p>
 
-</p>
+            </a>
 
-</a>
 
-</div>
+        </div>
 
-</div>
+    </div>
 
 </section>
-<!-- ========================= -->
-<!-- ПОСЛЕДНИЕ НОВОСТИ -->
-<!-- ========================= -->
+
+
+<!-- =====================================================
+     ПОСЛЕДНИЕ НОВОСТИ
+===================================================== -->
 
 <section class="news">
 
     <div class="container">
 
+
         <div class="section-header">
 
-            <h2>Последние новости</h2>
+            <h2>
+                Последние новости
+            </h2>
 
-            <a href="news.html" class="section-link">
+
+            <a
+                href="news.html"
+                class="section-link"
+            >
                 Все новости →
             </a>
 
         </div>
 
+
         <div class="news-grid">
+
 
             <article class="news-card featured">
 
@@ -474,14 +539,19 @@ class="section-card">
                     08.08.2026
                 </span>
 
+
                 <h3>
                     Архив обновлён до версии 1.0
                 </h3>
 
+
                 <p>
+
                     Добавлены новые записи, обновлены данные
                     о заражённых и открыта база знаний A.S.I.S.
+
                 </p>
+
 
                 <a href="news.html">
                     Читать →
@@ -489,22 +559,28 @@ class="section-card">
 
             </article>
 
+
             <article class="news-card">
 
                 <span class="news-date">
                     06.08.2026
                 </span>
 
+
                 <h3>
                     Обнаружена новая локация
                 </h3>
 
+
                 <p>
+
                     Разведчики обнаружили неизвестный
                     промышленный комплекс.
+
                 </p>
 
             </article>
+
 
             <article class="news-card">
 
@@ -512,16 +588,21 @@ class="section-card">
                     04.08.2026
                 </span>
 
+
                 <h3>
                     Зафиксирована новая аномалия
                 </h3>
 
+
                 <p>
+
                     В северном секторе появилась
                     неизвестная пространственная зона.
+
                 </p>
 
             </article>
+
 
         </div>
 
@@ -529,291 +610,444 @@ class="section-card">
 
 </section>
 
-<!-- ========================= -->
-<!-- ПОПУЛЯРНЫЕ СТАТЬИ -->
-<!-- ========================= -->
+
+<!-- =====================================================
+     ПОПУЛЯРНЫЕ СТАТЬИ
+===================================================== -->
 
 <section class="popular">
 
-<div class="container">
-
-<div class="section-header">
-
-<h2>
-
-Популярные статьи
-
-</h2>
-
-<a
-href="encyclopedia.html"
-class="section-link">
-
-Открыть архив →
-
-</a>
-
-</div>
-
-<div class="popular-grid" id="popularGrid">
-</div>
-
-</div>
-
-</section>
-
-<!-- ========================= -->
-<!-- СЛУЧАЙНОЕ ДОСЬЕ -->
-<!-- ========================= -->
-
-<section class="random-file">
-
-<div class="container">
-
-<div class="random-card">
-
-<div class="random-left">
-
-<span>
-
-СЛУЧАЙНОЕ ДОСЬЕ
-
-</span>
-
-<h2>
-
-Загрузка досье...
-
-</h2>
-
-<p>
-
-Каждый раз при открытии страницы
-будет показываться случайная статья
-из базы данных A.S.I.S.
-
-Позже это будет работать через JavaScript.
-
-</p>
-
-<a
-href="encyclopedia.html"
-class="button primary">
-
-Открыть досье
-
-</a>
-
-</div>
-
-<div class="random-right">
-
-<div class="archive-number">
-
-043
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-</section>
-
-  <!-- ========================= -->
-<!-- КАРТА МИРА -->
-<!-- ========================= -->
-
-<section class="world-map">
-
     <div class="container">
+
 
         <div class="section-header">
 
-            <h2>Карта мира</h2>
+            <h2>
+                Популярные статьи
+            </h2>
 
-            <a href="map.html" class="section-link">
-                Открыть карту →
+
+            <a
+                href="encyclopedia.html"
+                class="section-link"
+            >
+                Открыть архив →
             </a>
 
         </div>
 
-        <div class="map-preview">
 
-            <img
-                src="map.webp"
-                alt="Карта игрового мира">
+        <!--
+            index.js автоматически вставит сюда
+            три статьи из archive.json.
+        -->
 
-            <div class="map-overlay">
+        <div class="popular-grid">
 
-                <h3>
-                    Исследуйте игровой мир
-                </h3>
+            <div class="archive-loading">
 
                 <p>
-                    Все регионы, города, базы,
-                    убежища и заражённые территории.
+                    Загрузка архива...
                 </p>
-
-                <a
-                    href="map.html"
-                    class="button primary">
-
-                    Открыть карту
-
-                </a>
 
             </div>
 
         </div>
 
+
     </div>
 
 </section>
 
-<!-- ========================= -->
-<!-- СТАТИСТИКА -->
-<!-- ========================= -->
 
-<section class="site-stats">
+<!-- =====================================================
+     СЛУЧАЙНОЕ ДОСЬЕ
+===================================================== -->
 
-<div class="container">
+<section class="random-file">
 
-<div class="stats-grid">
+    <div class="container">
 
-<div class="site-card">
 
-<h2>286</h2>
+        <div class="random-card">
 
-<span>Статей</span>
 
-</div>
+            <div class="random-left">
 
-<div class="site-card">
 
-<h2>534</h2>
+                <span>
+                    СЛУЧАЙНОЕ ДОСЬЕ
+                </span>
 
-<span>Комментария</span>
 
-</div>
+                <h2>
+                    Загрузка досье...
+                </h2>
 
-<div class="site-card">
 
-<h2>124</h2>
+                <p>
 
-<span>Игрока</span>
+                    Каждый раз при открытии страницы
+                    будет показываться случайная статья
+                    из базы данных A.S.I.S.
 
-</div>
+                </p>
 
-<div class="site-card">
 
-<h2>48</h2>
+                <a
+                    href="#"
+                    class="button primary"
+                >
 
-<span>Новостей</span>
+                    Открыть досье
 
-</div>
+                </a>
 
-</div>
 
-</div>
+            </div>
+
+
+            <div class="random-right">
+
+                <div class="archive-number">
+
+                    ---
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
 
 </section>
 
-<!-- ========================= -->
-<!-- FOOTER -->
-<!-- ========================= -->
+
+<!-- =====================================================
+     КАРТА МИРА
+===================================================== -->
+
+<section class="world-map">
+
+    <div class="container">
+
+
+        <div class="section-header">
+
+            <h2>
+                Карта мира
+            </h2>
+
+
+            <a
+                href="map.html"
+                class="section-link"
+            >
+                Открыть карту →
+            </a>
+
+        </div>
+
+
+        <div class="map-preview">
+
+
+            <img
+                src="map.webp"
+                alt="Карта игрового мира"
+            >
+
+
+            <div class="map-overlay">
+
+
+                <h3>
+                    Исследуйте игровой мир
+                </h3>
+
+
+                <p>
+
+                    Все регионы, города, базы,
+                    убежища и заражённые территории.
+
+                </p>
+
+
+                <a
+                    href="map.html"
+                    class="button primary"
+                >
+
+                    Открыть карту
+
+                </a>
+
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     СТАТИСТИКА САЙТА
+===================================================== -->
+
+<section class="site-stats">
+
+    <div class="container">
+
+
+        <h2 class="section-title">
+            Статистика архива
+        </h2>
+
+
+        <div class="stats-grid">
+
+
+            <div class="site-card">
+
+                <h2 data-stat="total">
+                    0
+                </h2>
+
+                <span>
+                    Статей
+                </span>
+
+            </div>
+
+
+            <div class="site-card">
+
+                <h2 data-stat="comments">
+                    0
+                </h2>
+
+                <span>
+                    Комментария
+                </span>
+
+            </div>
+
+
+            <div class="site-card">
+
+                <h2 data-stat="players">
+                    0
+                </h2>
+
+                <span>
+                    Игрока
+                </span>
+
+            </div>
+
+
+            <div class="site-card">
+
+                <h2 data-stat="news">
+                    0
+                </h2>
+
+                <span>
+                    Новостей
+                </span>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
 
 <footer class="footer">
 
-<div class="container footer-grid">
+    <div class="container">
 
-<div>
 
-<img
-src="logo.svg"
-alt="A.S.I.S."
-class="footer-logo">
+        <div class="footer-grid">
 
-<h2>
 
-A.S.I.S.
+            <div>
 
-</h2>
 
-<p>
+                <img
+                    src="logo.svg"
+                    alt="A.S.I.S."
+                    class="footer-logo"
+                >
 
-Archive Survival Information System
 
-</p>
+                <h2>
+                    A.S.I.S.
+                </h2>
 
-</div>
 
-<div>
+                <p>
 
-<h3>
+                    Archive Survival Information System
 
-Навигация
+                </p>
 
-</h3>
 
-<ul>
+            </div>
 
-<li><a href="index.html">Главная</a></li>
 
-<li><a href="encyclopedia.html">Энциклопедия</a></li>
+            <div>
 
-<li><a href="map.html">Карта</a></li>
 
-<li><a href="news.html">Новости</a></li>
+                <h3>
+                    Навигация
+                </h3>
 
-</ul>
 
-</div>
+                <ul>
 
-<div>
+                    <li>
+                        <a href="index.html">
+                            Главная
+                        </a>
+                    </li>
 
-<h3>
+                    <li>
+                        <a href="encyclopedia.html">
+                            Энциклопедия
+                        </a>
+                    </li>
 
-Сообщество
+                    <li>
+                        <a href="map.html">
+                            Карта
+                        </a>
+                    </li>
 
-</h3>
+                    <li>
+                        <a href="news.html">
+                            Новости
+                        </a>
+                    </li>
 
-<ul>
+                </ul>
 
-<li><a href="community.html">Комментарии</a></li>
+            </div>
 
-<li><a href="login.html">Войти</a></li>
 
-<li><a href="#">Discord</a></li>
+            <div>
 
-<li><a href="#">VK</a></li>
 
-</ul>
+                <h3>
+                    Сообщество
+                </h3>
 
-</div>
 
-</div>
+                <ul>
 
-<div class="copyright">
+                    <li>
+                        <a href="community.html">
+                            Сообщество
+                        </a>
+                    </li>
 
-<p>
+                    <li>
+                        <a href="login.html">
+                            Войти
+                        </a>
+                    </li>
 
-© 2026 A.S.I.S.
+                </ul>
 
-Все права защищены.
+            </div>
 
-</p>
 
-</div>
+        </div>
+
+
+        <div class="copyright">
+
+            © 2026 A.S.I.S.
+            Все права защищены.
+
+        </div>
+
+
+    </div>
 
 </footer>
 
-</main>
 
-<script src="app.js"></script>
+<!-- =====================================================
+     JAVASCRIPT
+===================================================== -->
+
+<script src="index.js"></script>
+
+
+<!-- =====================================================
+     LOADER SCRIPT
+===================================================== -->
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+        const loader =
+            document.getElementById("loader");
+
+
+        if (!loader) {
+            return;
+        }
+
+
+        setTimeout(
+            () => {
+
+                loader.style.opacity = "0";
+
+                loader.style.pointerEvents = "none";
+
+                loader.style.transition =
+                    "opacity .5s ease";
+
+
+                setTimeout(
+                    () => {
+
+                        loader.style.display = "none";
+
+                    },
+                    500
+                );
+
+
+            },
+            1200
+        );
+
+    }
+);
+
+</script>
+
 
 </body>
 
-  </html>
+</html>
