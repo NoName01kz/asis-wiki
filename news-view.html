@@ -11,7 +11,7 @@
 
     <meta
         name="description"
-        content="Новости A.S.I.S. — Archive Survival Information System">
+        content="Новость A.S.I.S. — Archive Survival Information System">
 
     <title>
         Новость — A.S.I.S.
@@ -27,366 +27,222 @@
            NEWS VIEW
         ===================================================== */
 
-        body.news-page {
-            background:
-                radial-gradient(
-                    circle at top,
-                    rgba(57, 217, 138, 0.04),
-                    transparent 35%
-                ),
-                #07090a;
+        .news-view-page {
+            padding: 80px 0;
         }
 
 
-        /* =====================================================
-           HERO
-        ===================================================== */
-
-        .news-article-hero {
-
-            position: relative;
-
-            min-height: 620px;
-
-            display: flex;
-
-            align-items: flex-end;
-
-            overflow: hidden;
-
-            background:
-                #080a0b;
-
-        }
-
-
-        .news-hero-background {
-
-            position: absolute;
-
-            inset: 0;
-
-            background-size: cover;
-
-            background-position: center;
-
-            transform: scale(1.03);
-
-            filter:
-                brightness(.52)
-                saturate(.75);
-
-        }
-
-
-        .news-hero-background::after {
-
-            content: "";
-
-            position: absolute;
-
-            inset: 0;
-
-            background:
-                linear-gradient(
-                    to bottom,
-                    rgba(0,0,0,.15) 0%,
-                    rgba(0,0,0,.3) 35%,
-                    rgba(7,9,10,.85) 78%,
-                    #07090a 100%
-                );
-
-        }
-
-
-        .news-hero-content {
-
-            position: relative;
-
-            z-index: 2;
-
-            width: 100%;
-
+        .news-view-header {
             max-width: 1000px;
-
-            margin: 0 auto;
-
-            padding:
-                120px 25px 65px;
-
-            text-align: center;
-
+            margin: 0 auto 40px;
         }
 
 
-        .news-back {
-
-            display: inline-flex;
-
+        .news-view-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
             align-items: center;
+            margin-bottom: 20px;
+        }
 
-            gap: 8px;
 
-            margin-bottom: 35px;
-
-            color: #a8b0b5;
-
-            text-decoration: none;
-
+        .news-view-meta span {
+            display: inline-flex;
+            align-items: center;
+            padding: 7px 14px;
+            border: 1px solid rgba(57,217,138,.25);
+            background: rgba(57,217,138,.06);
+            color: var(--accent);
             font-size: 12px;
-
-            font-weight: 600;
-
-            letter-spacing: 1.5px;
-
+            letter-spacing: 1px;
             text-transform: uppercase;
-
-            transition: .2s;
-
         }
 
 
-        .news-back:hover {
-
-            color: #39d98a;
-
-        }
-
-
-        .news-category {
-
-            display: inline-block;
-
-            margin-bottom: 18px;
-
-            color: #39d98a;
-
-            font-size: 12px;
-
-            font-weight: 700;
-
-            letter-spacing: 3px;
-
+        .news-view-title {
+            margin: 0;
+            font-size: clamp(36px, 6vw, 72px);
+            line-height: 1.05;
             text-transform: uppercase;
-
         }
 
 
-        .news-article-title {
-
-            margin: 0 auto 18px;
-
-            max-width: 900px;
-
-            color: #ffffff;
-
-            font-size: clamp(
-                38px,
-                6vw,
-                72px
-            );
-
-            line-height: 1.02;
-
-            font-weight: 800;
-
-            letter-spacing: -2px;
-
-            text-shadow:
-                0 3px 20px rgba(0,0,0,.7);
-
-        }
-
-
-        .news-date {
-
-            color: #8a949f;
-
-            font-size: 12px;
-
-            letter-spacing: 2px;
-
-            text-transform: uppercase;
-
+        .news-view-description {
+            max-width: 800px;
+            margin-top: 25px;
+            color: var(--text-light);
+            font-size: 18px;
+            line-height: 1.8;
         }
 
 
         /* =====================================================
-           ARTICLE
+           HERO IMAGE
         ===================================================== */
 
-        .news-article {
-
-            width: 100%;
-
-            max-width: 860px;
-
-            margin: 0 auto;
-
-            padding:
-                60px 25px 100px;
-
-        }
-
-
-        .news-cover {
-
-            width: 100%;
-
-            margin-bottom: 45px;
-
+        .news-view-hero {
+            max-width: 1100px;
+            margin: 0 auto 50px;
             overflow: hidden;
-
-            background: #0d1113;
-
-            border:
-                1px solid
-                rgba(255,255,255,.07);
-
-            box-shadow:
-                0 25px 80px
-                rgba(0,0,0,.35);
-
+            border: 1px solid rgba(255,255,255,.08);
+            background: #111;
         }
 
 
-        .news-cover img {
-
+        .news-view-hero img {
             display: block;
-
             width: 100%;
-
-            height: auto;
-
             max-height: 600px;
-
             object-fit: cover;
-
         }
 
 
         /* =====================================================
-           INTRO
-        ===================================================== */
-
-        .news-description {
-
-            margin-bottom: 40px;
-
-            padding-left: 22px;
-
-            border-left:
-                3px solid
-                #39d98a;
-
-            color: #d5dadd;
-
-            font-size: 21px;
-
-            line-height: 1.7;
-
-        }
-
-
-        /* =====================================================
-           TEXT
+           CONTENT
         ===================================================== */
 
         .news-content {
+            max-width: 900px;
+            margin: 0 auto;
+        }
 
-            color: #b7bec3;
 
+        .news-block-title {
+            margin: 70px 0 30px;
+            font-size: clamp(32px, 5vw, 58px);
+            line-height: 1.1;
+            text-transform: uppercase;
+        }
+
+
+        .news-block-subtitle {
+            margin: 50px 0 20px;
+            color: var(--accent);
+            font-size: clamp(20px, 3vw, 30px);
+            line-height: 1.3;
+        }
+
+
+        .news-block-text {
+            margin: 0 0 28px;
+            color: var(--text-light);
             font-size: 17px;
-
-            line-height: 1.95;
-
-        }
-
-
-        .news-content p {
-
-            margin:
-                0 0 28px;
-
-        }
-
-
-        .news-content h2 {
-
-            margin:
-                55px 0 20px;
-
-            color: #ffffff;
-
-            font-size: 28px;
-
-        }
-
-
-        .news-content h3 {
-
-            margin:
-                45px 0 18px;
-
-            color: #39d98a;
-
-            font-size: 21px;
-
+            line-height: 1.9;
         }
 
 
         /* =====================================================
-           META
+           SIDE RED BLOCK
         ===================================================== */
 
-        .news-meta {
-
-            display: flex;
-
-            flex-wrap: wrap;
-
-            gap: 12px;
-
-            margin-top: 55px;
-
-            padding-top: 25px;
-
-            border-top:
-                1px solid
-                rgba(255,255,255,.08);
-
-        }
-
-
-        .news-meta-item {
-
-            padding:
-                9px 13px;
-
+        .news-block-side {
+            margin: 40px 0;
+            padding: 25px 30px;
+            border-left: 5px solid var(--danger);
             background:
-                rgba(255,255,255,.025);
-
-            border:
-                1px solid
-                rgba(255,255,255,.07);
-
-            color: #7f898f;
-
-            font-size: 11px;
-
-            letter-spacing: 1px;
-
+                linear-gradient(
+                    90deg,
+                    rgba(229,72,77,.18),
+                    rgba(229,72,77,.05)
+                );
+            color: #fff;
+            font-size: 17px;
+            font-weight: 700;
+            line-height: 1.6;
             text-transform: uppercase;
-
         }
 
 
-        .news-meta-item strong {
+        /* =====================================================
+           QUOTE
+        ===================================================== */
 
-            color: #39d98a;
+        .news-block-quote {
+            position: relative;
+            margin: 45px 0;
+            padding: 30px 35px;
+            border-left: 3px solid var(--accent);
+            background: rgba(255,255,255,.03);
+            color: #fff;
+            font-size: 21px;
+            font-style: italic;
+            line-height: 1.7;
+        }
 
-            font-weight: 600;
 
+        .news-block-quote::before {
+            content: "“";
+            display: block;
+            margin-bottom: -20px;
+            color: var(--accent);
+            font-size: 60px;
+            line-height: 1;
+        }
+
+
+        /* =====================================================
+           WARNING
+        ===================================================== */
+
+        .news-block-warning {
+            margin: 45px 0;
+            padding: 25px 30px;
+            border: 1px solid rgba(229,72,77,.4);
+            background: rgba(229,72,77,.08);
+        }
+
+
+        .news-warning-label {
+            display: block;
+            margin-bottom: 12px;
+            color: var(--danger);
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 2px;
+        }
+
+
+        .news-block-warning p {
+            margin: 0;
+            color: #fff;
+            line-height: 1.7;
+        }
+
+
+        /* =====================================================
+           IMAGE BLOCK
+        ===================================================== */
+
+        .news-block-image {
+            margin: 45px 0;
+        }
+
+
+        .news-block-image img {
+            display: block;
+            width: 100%;
+            max-height: 650px;
+            object-fit: cover;
+            border: 1px solid rgba(255,255,255,.08);
+        }
+
+
+        .news-block-image figcaption {
+            margin-top: 10px;
+            color: var(--text-light);
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+
+        /* =====================================================
+           BACK BUTTON
+        ===================================================== */
+
+        .news-view-back {
+            max-width: 900px;
+            margin: 60px auto 0;
         }
 
 
@@ -395,50 +251,9 @@
         ===================================================== */
 
         .news-view-error {
-
-            max-width: 800px;
-
-            margin:
-                120px auto;
-
-            padding:
-                70px 25px;
-
+            max-width: 700px;
+            margin: 100px auto;
             text-align: center;
-
-        }
-
-
-        .news-error-code {
-
-            margin-bottom: 15px;
-
-            color: #39d98a;
-
-            font-size: 13px;
-
-            letter-spacing: 4px;
-
-            font-weight: 700;
-
-        }
-
-
-        .news-view-error h1 {
-
-            margin-bottom: 15px;
-
-            color: #ffffff;
-
-        }
-
-
-        .news-view-error p {
-
-            margin-bottom: 30px;
-
-            color: #7f898f;
-
         }
 
 
@@ -448,51 +263,35 @@
 
         @media (max-width: 700px) {
 
-            .news-article-hero {
-
-                min-height: 520px;
-
+            .news-view-page {
+                padding: 50px 0;
             }
 
 
-            .news-hero-content {
-
-                padding:
-                    100px 20px 45px;
-
-            }
-
-
-            .news-article-title {
-
+            .news-view-title {
                 font-size: 38px;
-
-                letter-spacing: -1px;
-
             }
 
 
-            .news-description {
-
-                font-size: 18px;
-
-            }
-
-
-            .news-content {
-
+            .news-view-description {
                 font-size: 16px;
-
-                line-height: 1.8;
-
             }
 
 
-            .news-article {
+            .news-block-text {
+                font-size: 16px;
+            }
 
-                padding:
-                    35px 18px 70px;
 
+            .news-block-side,
+            .news-block-warning,
+            .news-block-quote {
+                padding: 20px;
+            }
+
+
+            .news-block-quote {
+                font-size: 18px;
             }
 
         }
@@ -502,7 +301,7 @@
 </head>
 
 
-<body class="news-page">
+<body>
 
 
 <!-- =====================================================
@@ -541,13 +340,15 @@
 </div>
 
 
+
 <!-- =====================================================
      HEADER
 ===================================================== -->
 
-<header class="site-header">
+<header class="header">
 
     <div class="container">
+
 
         <a
             href="index.html"
@@ -570,6 +371,7 @@
             </div>
 
         </a>
+
 
 
         <nav class="navigation">
@@ -601,7 +403,17 @@
         </nav>
 
 
+
         <div class="header-right">
+
+            <div class="search-box">
+
+                <input
+                    type="text"
+                    placeholder="Поиск по архиву...">
+
+            </div>
+
 
             <a
                 href="login.html"
@@ -614,6 +426,7 @@
         </div>
 
 
+
         <button
             class="mobile-menu"
             type="button"
@@ -623,191 +436,137 @@
 
         </button>
 
+
     </div>
 
 </header>
 
 
+
 <!-- =====================================================
-     NEWS HERO
+     NEWS PAGE
 ===================================================== -->
 
-<section
-    id="newsHero"
-    class="news-article-hero">
+<main class="news-view-page">
 
 
-    <div
-        id="newsHeroBackground"
-        class="news-hero-background">
-
-    </div>
+    <div class="container">
 
 
-    <div class="news-hero-content">
+        <!-- NEWS HEADER -->
 
-        <a
-            href="news.html"
-            class="news-back">
-
-            ← Назад к новостям
-
-        </a>
+        <div class="news-view-header">
 
 
-        <div
-            id="newsCategory"
-            class="news-category">
+            <div class="news-view-meta">
 
-            ЗАГРУЗКА
+
+                <span id="newsCategory">
+                    АРХИВ
+                </span>
+
+
+                <span id="newsDate">
+                    —
+                </span>
+
+
+                <span id="newsStatus">
+                    ОПУБЛИКОВАНО
+                </span>
+
+
+            </div>
+
+
+
+            <h1
+                id="newsTitle"
+                class="news-view-title">
+
+                Загрузка новости...
+
+            </h1>
+
+
+
+            <p
+                id="newsDescription"
+                class="news-view-description">
+
+                Загрузка информации...
+
+            </p>
+
 
         </div>
 
 
-        <h1
-            id="newsTitle"
-            class="news-article-title">
 
-            Загрузка новости...
-
-        </h1>
-
+        <!-- =================================================
+             HERO IMAGE
+        ================================================= -->
 
         <div
-            id="newsDate"
-            class="news-date">
-
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- =====================================================
-     ARTICLE
-===================================================== -->
-
-<main>
-
-    <article class="news-article">
-
-
-        <!-- COVER -->
-
-        <div class="news-cover">
+            id="newsHero"
+            class="news-view-hero">
 
             <img
-                id="newsImage"
-                src=""
-                alt=""
-                style="display:none;">
+                id="newsHeroImage"
+                src="placeholder.webp"
+                alt="Новость A.S.I.S.">
 
         </div>
 
 
-        <!-- DESCRIPTION -->
 
-        <div
-            id="newsDescription"
-            class="news-description">
+        <!-- =================================================
+             NEWS CONTENT
+        ================================================= -->
 
-        </div>
-
-
-        <!-- CONTENT -->
-
-        <div
+        <article
             id="newsContent"
             class="news-content">
 
-        </div>
+            <p class="news-block-text">
+                Загрузка содержимого новости...
+            </p>
+
+        </article>
 
 
-        <!-- META -->
 
-        <div class="news-meta">
+        <!-- =================================================
+             BACK
+        ================================================= -->
 
-            <div class="news-meta-item">
+        <div class="news-view-back">
 
-                ID:
+            <a
+                href="news.html"
+                class="button secondary">
 
-                <strong id="newsId">
-                    —
-                </strong>
+                ← Вернуться к новостям
 
-            </div>
-
-
-            <div class="news-meta-item">
-
-                Статус:
-
-                <strong id="newsStatus">
-                    —
-                </strong>
-
-            </div>
-
-
-            <div class="news-meta-item">
-
-                Категория:
-
-                <strong id="newsMetaCategory">
-                    —
-                </strong>
-
-            </div>
+            </a>
 
         </div>
 
 
-    </article>
+    </div>
 
 </main>
 
-
-<!-- =====================================================
-     ERROR
-===================================================== -->
-
-<div
-    id="newsError"
-    class="news-view-error"
-    style="display:none;">
-
-    <div class="news-error-code">
-        A.S.I.S. / 404
-    </div>
-
-    <h1>
-        НОВОСТЬ НЕ НАЙДЕНА
-    </h1>
-
-    <p>
-        Запрошенная запись отсутствует
-        в базе данных A.S.I.S.
-    </p>
-
-    <a
-        href="news.html"
-        class="button primary">
-
-        ← Вернуться к новостям
-
-    </a>
-
-</div>
 
 
 <!-- =====================================================
      FOOTER
 ===================================================== -->
 
-<footer class="site-footer">
+<footer class="footer">
 
     <div class="container">
+
 
         <div class="footer-grid">
 
@@ -819,15 +578,19 @@
                     alt="A.S.I.S."
                     class="footer-logo">
 
+
                 <h2>
                     A.S.I.S.
                 </h2>
+
 
                 <p>
                     Archive Survival Information System
                 </p>
 
-                <p style="margin-top:15px;">
+
+                <p
+                    style="margin-top:15px;">
 
                     Архив выживших.
                     Система хранения и распространения
@@ -836,6 +599,7 @@
                 </p>
 
             </div>
+
 
 
             <div>
@@ -875,6 +639,7 @@
             </div>
 
 
+
             <div>
 
                 <h3>
@@ -909,6 +674,7 @@
         </div>
 
 
+
         <div class="copyright">
 
             © 2026 A.S.I.S.
@@ -916,12 +682,19 @@
 
         </div>
 
+
     </div>
 
 </footer>
 
 
+
+<!-- =====================================================
+     JAVASCRIPT
+===================================================== -->
+
 <script src="news-view.js"></script>
+
 
 </body>
 
