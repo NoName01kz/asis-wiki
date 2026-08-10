@@ -1,86 +1,48 @@
 /*
-===========================================================
+=========================================================
 A.S.I.S.
 Archive Survival Information System
 
 news-view.js
-Просмотр отдельной новости
+Динамическая страница отдельной новости
 
-URL:
+Поддерживаемые блоки:
 
-news-view.html?id=NEWS-001
-
-===========================================================
+title
+subtitle
+side
+text
+image
+quote
+warning
+=========================================================
 */
 
+document.addEventListener("DOMContentLoaded", () => {
 
-document.addEventListener(
-    "DOMContentLoaded",
-    () => {
+    loadNews();
 
-        loadNews();
-
-    }
-);
+});
 
 
-/* =========================================================
+/* =====================================================
    ГЛОБАЛЬНЫЕ ДАННЫЕ
-========================================================= */
+===================================================== */
 
 let newsArchive = [];
 
 
-/* =========================================================
-   ЗАГРУЗКА НОВОСТИ
-========================================================= */
+/* =====================================================
+   ЗАГРУЗКА NEWS.JSON
+===================================================== */
 
 async function loadNews() {
 
     try {
 
-        /*
-        Получаем ID из URL.
-
-        Например:
-
-        news-view.html?id=NEWS-001
-        */
-
-        const params =
-            new URLSearchParams(
-                window.location.search
-            );
-
-
-        const newsId =
-            params.get("id");
-
-
-        /*
-        Если ID отсутствует.
-        */
-
-        if (!newsId) {
-
-            throw new Error(
-                "ID новости отсутствует в URL"
-            );
-
-        }
-
-
-        /*
-        Загружаем news.json.
-        */
-
-        const response =
-            await fetch(
-                "news.json",
-                {
-                    cache: "no-store"
-                }
-            );
+        const response = await fetch("news.json", {
+            cache: "no-store"
+        });
 
 
         if (!response.ok) {
@@ -92,13 +54,8 @@ async function loadNews() {
         }
 
 
-        newsArchive =
-            await response.json();
+        newsArchive = await response.json();
 
-
-        /*
-        Проверяем структуру.
-        */
 
         if (!Array.isArray(newsArchive)) {
 
@@ -109,27 +66,25 @@ async function loadNews() {
         }
 
 
-        /*
-        Ищем новость по ID.
-        */
-
-        const news =
-            newsArchive.find(
-                item =>
-                    String(item.id) ===
-                    String(newsId)
-            );
+        console.log(
+            "%cA.S.I.S. NEWS VIEW ONLINE",
+            "color:#39D98A;font-size:18px;font-weight:bold"
+        );
 
 
-        /*
-        Новость не найдена.
-        */
+        console.log(
+            `Загружено новостей: ${newsArchive.length}`
+        );
 
-        if (!news) {
+
+        const newsId =
+            getNewsIdFromURL();
+
+
+        if (!newsId) {
 
             showNewsError(
-                "Новость не найдена",
-                `Запись с ID "${newsId}" отсутствует в news.json.`
+                "Идентификатор новости отсутствует."
             );
 
             return;
@@ -137,43 +92,35 @@ async function loadNews() {
         }
 
 
-        /*
-        Отрисовываем новость.
-        */
+        const news =
+            findNewsById(newsId);
+
+
+        if (!news) {
+
+            showNewsError(
+                `Новость ${newsId} не найдена в архиве.`
+            );
+
+            return;
+
+        }
+
 
         renderNews(news);
-
-
-        /*
-        Убираем loader.
-        */
-
-        hideLoader();
-
-
-        console.log(
-            "%cA.S.I.S NEWS VIEW ONLINE",
-            "color:#39D98A;font-size:18px;font-weight:bold"
-        );
-
-
-        console.log(
-            `Открыта новость: ${news.id}`
-        );
 
     }
 
     catch (error) {
 
         console.error(
-            "A.S.I.S NEWS VIEW ERROR:",
+            "A.S.I.S. NEWS DATABASE ERROR:",
             error
         );
 
 
         showNewsError(
-            "Ошибка загрузки новости",
-            "Не удалось получить данные из базы news.json."
+            "Не удалось загрузить базу новостей A.S.I.S."
         );
 
     }
@@ -181,16 +128,129 @@ async function loadNews() {
 }
 
 
-/* =========================================================
-   ОТРИСОВКА НОВОСТИ
-========================================================= */
+/* =====================================================
+   ПОЛУЧЕНИЕ ID ИЗ URL
+===================================================== */
+
+function getNewsIdFromURL() {
+
+    const params =
+        new URLSearchParams(
+            window.location.search
+        );
+
+
+    return (
+        params.get("id") ||
+        params.get("news") ||
+        ""
+    ).trim();
+
+}
+
+
+/* =====================================================
+   ПОИСК НОВОСТИ
+===================================================== */
+
+function findNewsById(id) {
+
+    const target =
+        String(id)
+            .trim()
+            .toLowerCase();
+
+
+    return newsArchive.find(news => {
+
+        return (
+            String(news.id || "")
+                .trim()
+                .toLowerCase()
+            === target
+        );
+
+    });
+
+}
+
+
+/* =====================================================
+   ОТОБРАЖЕНИЕ НОВОСТИ
+===================================================== */
 
 function renderNews(news) {
 
+    updatePageMeta(news);
+
+    renderHeaderInfo(news);
+
+    renderNewsBlocks(news);
+
+    renderLegacyContent(news);
+
+}
+
+
+/* =====================================================
+   META / TITLE
+===================================================== */
+
+function updatePageMeta(news) {
+
+    const title =
+        news.title ||
+        "Новость A.S.I.S.";
+
+
+    document.title =
+        `${title} — A.S.I.S.`;
+
+
+    const description =
+        news.description ||
+        news.content ||
+        title;
+
+
+    const meta =
+        document.querySelector(
+            'meta[name="description"]'
+        );
+
+
+    if (meta) {
+
+        meta.setAttribute(
+            "content",
+            truncateText(
+                description,
+                160
+            )
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   ИНФОРМАЦИЯ В ШАПКЕ НОВОСТИ
+===================================================== */
+
+function renderHeaderInfo(news) {
 
     /*
-    TITLE
+    Возможные элементы HTML:
+
+    #newsTitle
+    #newsDate
+    #newsCategory
+    #newsStatus
+    #newsDescription
+    #newsHeroImage
     */
+
 
     const title =
         document.getElementById(
@@ -207,30 +267,20 @@ function renderNews(news) {
     }
 
 
-
-    /*
-    DESCRIPTION
-    */
-
-    const description =
+    const date =
         document.getElementById(
-            "newsDescription"
+            "newsDate"
         );
 
 
-    if (description) {
+    if (date) {
 
-        description.textContent =
-            news.description ||
+        date.textContent =
+            news.date ||
             "";
 
     }
 
-
-
-    /*
-    CATEGORY
-    */
 
     const category =
         document.getElementById(
@@ -242,35 +292,10 @@ function renderNews(news) {
 
         category.textContent =
             news.category ||
-            "НОВОСТИ A.S.I.S.";
+            "АРХИВ";
 
     }
 
-
-
-    /*
-    DATE
-    */
-
-    const date =
-        document.getElementById(
-            "newsDate"
-        );
-
-
-    if (date) {
-
-        date.textContent =
-            news.date ||
-            "Дата неизвестна";
-
-    }
-
-
-
-    /*
-    STATUS
-    */
 
     const status =
         document.getElementById(
@@ -287,143 +312,77 @@ function renderNews(news) {
     }
 
 
-
-    /*
-    CATEGORY META
-    */
-
-    const categoryMeta =
+    const description =
         document.getElementById(
-            "newsCategoryMeta"
+            "newsDescription"
         );
 
 
-    if (categoryMeta) {
+    if (description) {
 
-        categoryMeta.textContent =
-            news.category ||
-            "Новости";
+        description.textContent =
+            news.description ||
+            "";
 
     }
 
 
-
-    /*
-    IMAGE
-    */
-
-    const image =
+    const heroImage =
         document.getElementById(
-            "newsImage"
-        );
-
-
-    const imageWrapper =
-        document.getElementById(
-            "newsImageWrapper"
+            "newsHeroImage"
         );
 
 
     if (
-        image &&
+        heroImage &&
         news.image
     ) {
 
-        image.src =
+        heroImage.src =
             news.image;
 
 
-        image.alt =
+        heroImage.alt =
             news.title ||
             "Новость A.S.I.S.";
 
-
-        image.onerror =
-            () => {
-
-                if (imageWrapper) {
-
-                    imageWrapper.style.display =
-                        "none";
-
-                }
-
-            };
-
-    }
-    else {
-
-        if (imageWrapper) {
-
-            imageWrapper.style.display =
-                "none";
-
-        }
-
     }
 
+}
 
 
-    /*
-    CONTENT
-    */
+/* =====================================================
+   РЕНДЕР BLOCKS
+===================================================== */
 
-    const content =
+function renderNewsBlocks(news) {
+
+    const container =
         document.getElementById(
             "newsContent"
         );
 
 
-    if (content) {
-
-        renderNewsContent(
-            content,
-            news.content
-        );
-
-    }
-
-
-
     /*
-    TITLE ВКЛАДКИ БРАУЗЕРА
+    Если контейнера нет,
+    пробуем найти стандартные варианты.
     */
 
-    document.title =
-        `${news.title || "Новость"} — A.S.I.S.`;
-
-}
-
-
-/* =========================================================
-   ТЕКСТ НОВОСТИ
-========================================================= */
-
-function renderNewsContent(
-    container,
-    text
-) {
-
-
-    container.innerHTML = "";
-
-
-    if (!text) {
-
-        const paragraph =
-            document.createElement(
-                "p"
-            );
-
-
-        paragraph.textContent =
-            "Содержимое новости отсутствует.";
-
-
-        container.appendChild(
-            paragraph
+    const target =
+        container ||
+        document.querySelector(
+            ".news-content"
+        ) ||
+        document.querySelector(
+            ".article-content"
         );
 
+
+    if (!target) {
+
+        console.warn(
+            "Контейнер #newsContent не найден."
+        );
 
         return;
 
@@ -431,223 +390,57 @@ function renderNewsContent(
 
 
     /*
-    Поддерживаем переносы строк.
-
-    Например:
-
-    Первая часть.
-
-    Вторая часть.
-
-    Третья часть.
+    Очищаем старое содержимое.
     */
 
-    const paragraphs =
-        String(text)
-            .split(/\n\s*\n/)
-            .map(
-                item =>
-                    item.trim()
-            )
-            .filter(
-                item =>
-                    item.length > 0
-            );
+    target.innerHTML = "";
 
 
-    paragraphs.forEach(
-        paragraphText => {
+    /*
+    Если blocks отсутствует,
+    используем старый формат.
+    */
 
-            const paragraph =
-                document.createElement(
-                    "p"
+    if (
+        !Array.isArray(
+            news.blocks
+        )
+        ||
+        news.blocks.length === 0
+    ) {
+
+        renderOldNewsFormat(
+            target,
+            news
+        );
+
+        return;
+
+    }
+
+
+    /*
+    Создаём каждый блок
+    строго в том порядке,
+    в котором он находится
+    в news.json.
+    */
+
+    news.blocks.forEach(
+        (block, index) => {
+
+            const element =
+                createNewsBlock(
+                    block,
+                    index
                 );
 
 
-            paragraph.textContent =
-                paragraphText;
-
-
-            container.appendChild(
-                paragraph
-            );
-
-        }
-    );
-
-}
-
-
-/* =========================================================
-   ОШИБКА
-========================================================= */
-
-function showNewsError(
-    titleText,
-    messageText
-) {
-
-
-    /*
-    Скрываем основной материал.
-    */
-
-    const view =
-        document.getElementById(
-            "newsView"
-        );
-
-
-    if (view) {
-
-        view.style.display =
-            "none";
-
-    }
-
-
-
-    /*
-    Показываем ошибку.
-    */
-
-    const error =
-        document.getElementById(
-            "newsError"
-        );
-
-
-    if (error) {
-
-        error.style.display =
-            "block";
-
-    }
-
-
-
-    /*
-    Заголовок ошибки.
-    */
-
-    const errorTitle =
-        document.getElementById(
-            "newsErrorTitle"
-        );
-
-
-    if (errorTitle) {
-
-        errorTitle.textContent =
-            titleText;
-
-    }
-
-
-
-    /*
-    Текст ошибки.
-    */
-
-    const errorText =
-        document.getElementById(
-            "newsErrorText"
-        );
-
-
-    if (errorText) {
-
-        errorText.textContent =
-            messageText;
-
-    }
-
-
-
-    hideLoader();
-
-}
-
-
-/* =========================================================
-   LOADER
-========================================================= */
-
-function hideLoader() {
-
-    const loader =
-        document.querySelector(
-            ".loader"
-        );
-
-
-    if (!loader) {
-
-        return;
-
-    }
-
-
-    loader.classList.add(
-        "hidden"
-    );
-
-
-    /*
-    На случай, если в style.css
-    нет анимации скрытия.
-    */
-
-    setTimeout(
-        () => {
-
-            loader.style.display =
-                "none";
-
-        },
-        500
-    );
-
-}
-
-
-/* =========================================================
-   ПОИСК ИЗ HEADER
-========================================================= */
-
-const search =
-    document.getElementById(
-        "newsViewSearch"
-    );
-
-
-if (search) {
-
-    search.addEventListener(
-        "keydown",
-        event => {
-
-            if (
-                event.key ===
-                "Enter"
-            ) {
-
-                const query =
-                    search.value.trim();
-
-
-                if (!query) {
-
-                    window.location.href =
-                        "news.html";
-
-                    return;
-
-                }
-
-
-                window.location.href =
-                    `news.html?search=${encodeURIComponent(query)}`;
+            if (element) {
+
+                target.appendChild(
+                    element
+                );
 
             }
 
@@ -657,44 +450,670 @@ if (search) {
 }
 
 
-/* =========================================================
-   МОБИЛЬНОЕ МЕНЮ
-========================================================= */
+/* =====================================================
+   СОЗДАНИЕ БЛОКА
+===================================================== */
 
-const mobileMenu =
-    document.querySelector(
-        ".mobile-menu"
-    );
-
-
-const navigation =
-    document.querySelector(
-        ".navigation"
-    );
-
-
-if (
-    mobileMenu &&
-    navigation
+function createNewsBlock(
+    block,
+    index
 ) {
 
-    mobileMenu.addEventListener(
-        "click",
-        () => {
+    if (!block) {
 
-            navigation.classList.toggle(
-                "mobile-open"
-            );
+        return null;
+
+    }
+
+
+    const type =
+        String(
+            block.type || ""
+        )
+        .trim()
+        .toLowerCase();
+
+
+    switch (type) {
+
+
+        /* =============================================
+           TITLE
+        ============================================= */
+
+        case "title": {
+
+            const element =
+                document.createElement(
+                    "h1"
+                );
+
+
+            element.className =
+                "news-block-title";
+
+
+            element.textContent =
+                block.content ||
+                "";
+
+
+            return element;
 
         }
+
+
+        /* =============================================
+           SUBTITLE
+        ============================================= */
+
+        case "subtitle": {
+
+            const element =
+                document.createElement(
+                    "h2"
+                );
+
+
+            element.className =
+                "news-block-subtitle";
+
+
+            element.textContent =
+                block.content ||
+                "";
+
+
+            return element;
+
+        }
+
+
+        /* =============================================
+           TEXT
+        ============================================= */
+
+        case "text": {
+
+            const element =
+                document.createElement(
+                    "p"
+                );
+
+
+            element.className =
+                "news-block-text";
+
+
+            element.textContent =
+                block.content ||
+                "";
+
+
+            return element;
+
+        }
+
+
+        /* =============================================
+           SIDE
+        ============================================= */
+
+        case "side": {
+
+            const element =
+                document.createElement(
+                    "aside"
+                );
+
+
+            element.className =
+                "news-block-side";
+
+
+            element.textContent =
+                block.content ||
+                "";
+
+
+            return element;
+
+        }
+
+
+        /* =============================================
+           QUOTE
+        ============================================= */
+
+        case "quote": {
+
+            const element =
+                document.createElement(
+                    "blockquote"
+                );
+
+
+            element.className =
+                "news-block-quote";
+
+
+            element.textContent =
+                block.content ||
+                "";
+
+
+            return element;
+
+        }
+
+
+        /* =============================================
+           WARNING
+        ============================================= */
+
+        case "warning": {
+
+            const element =
+                document.createElement(
+                    "div"
+                );
+
+
+            element.className =
+                "news-block-warning";
+
+
+            const label =
+                document.createElement(
+                    "span"
+                );
+
+
+            label.className =
+                "news-warning-label";
+
+
+            label.textContent =
+                "⚠ ПРЕДУПРЕЖДЕНИЕ";
+
+
+            const text =
+                document.createElement(
+                    "p"
+                );
+
+
+            text.textContent =
+                block.content ||
+                "";
+
+
+            element.appendChild(
+                label
+            );
+
+
+            element.appendChild(
+                text
+            );
+
+
+            return element;
+
+        }
+
+
+        /* =============================================
+           IMAGE
+        ============================================= */
+
+        case "image": {
+
+            const wrapper =
+                document.createElement(
+                    "figure"
+                );
+
+
+            wrapper.className =
+                "news-block-image";
+
+
+            const image =
+                document.createElement(
+                    "img"
+                );
+
+
+            image.src =
+                block.src ||
+                block.image ||
+                "placeholder.webp";
+
+
+            image.alt =
+                block.alt ||
+                block.caption ||
+                "Изображение новости";
+
+
+            image.loading =
+                "lazy";
+
+
+            image.onerror =
+                function () {
+
+                    this.src =
+                        "placeholder.webp";
+
+                };
+
+
+            wrapper.appendChild(
+                image
+            );
+
+
+            /*
+            Если указана подпись,
+            выводим её под изображением.
+            */
+
+            if (
+                block.caption
+            ) {
+
+                const caption =
+                    document.createElement(
+                        "figcaption"
+                    );
+
+
+                caption.textContent =
+                    block.caption;
+
+
+                wrapper.appendChild(
+                    caption
+                );
+
+            }
+
+
+            return wrapper;
+
+        }
+
+
+        /* =============================================
+           НЕИЗВЕСТНЫЙ ТИП
+        ============================================= */
+
+        default: {
+
+            console.warn(
+                `Неизвестный тип блока: ${type}`
+            );
+
+
+            /*
+            Чтобы случайно не потерять текст,
+            неизвестный блок превращается
+            в обычный текст.
+            */
+
+            if (
+                block.content
+            ) {
+
+                const element =
+                    document.createElement(
+                        "p"
+                    );
+
+
+                element.className =
+                    "news-block-text";
+
+
+                element.textContent =
+                    block.content;
+
+
+                return element;
+
+            }
+
+
+            return null;
+
+        }
+
+    }
+
+}
+
+
+/* =====================================================
+   СТАРЫЙ ФОРМАТ NEWS.JSON
+===================================================== */
+
+function renderOldNewsFormat(
+    container,
+    news
+) {
+
+    /*
+    Поддержка старой структуры:
+
+    title
+    image
+    description
+    content
+    */
+
+
+    if (news.title) {
+
+        const title =
+            document.createElement(
+                "h1"
+            );
+
+
+        title.className =
+            "news-block-title";
+
+
+        title.textContent =
+            news.title;
+
+
+        container.appendChild(
+            title
+        );
+
+    }
+
+
+    if (news.image) {
+
+        const image =
+            document.createElement(
+                "img"
+            );
+
+
+        image.className =
+            "news-block-image";
+
+
+        image.src =
+            news.image;
+
+
+        image.alt =
+            news.title ||
+            "Новость";
+
+
+        image.loading =
+            "lazy";
+
+
+        image.onerror =
+            function () {
+
+                this.src =
+                    "placeholder.webp";
+
+            };
+
+
+        container.appendChild(
+            image
+        );
+
+    }
+
+
+    if (news.description) {
+
+        const subtitle =
+            document.createElement(
+                "p"
+            );
+
+
+        subtitle.className =
+            "news-block-subtitle";
+
+
+        subtitle.textContent =
+            news.description;
+
+
+        container.appendChild(
+            subtitle
+        );
+
+    }
+
+
+    if (news.content) {
+
+        const text =
+            document.createElement(
+                "p"
+            );
+
+
+        text.className =
+            "news-block-text";
+
+
+        text.textContent =
+            news.content;
+
+
+        container.appendChild(
+            text
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   ДОПОЛНИТЕЛЬНАЯ СОВМЕСТИМОСТЬ
+===================================================== */
+
+function renderLegacyContent(news) {
+
+    /*
+    Если в HTML есть отдельный
+    #newsLegacyContent, можно вывести
+    старый content туда.
+    */
+
+    const element =
+        document.getElementById(
+            "newsLegacyContent"
+        );
+
+
+    if (!element) {
+
+        return;
+
+    }
+
+
+    if (
+        news.content &&
+        !Array.isArray(news.blocks)
+    ) {
+
+        element.textContent =
+            news.content;
+
+    }
+    else {
+
+        element.innerHTML =
+            "";
+
+    }
+
+}
+
+
+/* =====================================================
+   ОШИБКА
+===================================================== */
+
+function showNewsError(
+    message
+) {
+
+    const container =
+        document.getElementById(
+            "newsContent"
+        )
+        ||
+        document.querySelector(
+            ".news-content"
+        )
+        ||
+        document.querySelector(
+            ".article-content"
+        );
+
+
+    if (!container) {
+
+        console.error(
+            message
+        );
+
+        return;
+
+    }
+
+
+    container.innerHTML = `
+
+        <div class="archive-error">
+
+            <div class="archive-error-code">
+                NEWS ERROR
+            </div>
+
+            <h2>
+                НОВОСТЬ НЕ НАЙДЕНА
+            </h2>
+
+            <p>
+                ${escapeHTML(message)}
+            </p>
+
+            <a
+                href="news.html"
+                class="button primary">
+
+                ← ВЕРНУТЬСЯ К НОВОСТЯМ
+
+            </a>
+
+        </div>
+
+    `;
+
+}
+
+
+/* =====================================================
+   СОКРАЩЕНИЕ ТЕКСТА
+===================================================== */
+
+function truncateText(
+    text,
+    maxLength
+) {
+
+    if (!text) {
+
+        return "";
+
+    }
+
+
+    text =
+        String(text);
+
+
+    if (
+        text.length <= maxLength
+    ) {
+
+        return text;
+
+    }
+
+
+    return (
+        text
+            .substring(
+                0,
+                maxLength
+            )
+            .trim()
+        + "..."
     );
 
 }
 
 
-/* =========================================================
-   A.S.I.S STATUS
-========================================================= */
+/* =====================================================
+   ЗАЩИТА HTML
+===================================================== */
+
+function escapeHTML(
+    value
+) {
+
+    return String(
+        value ?? ""
+    )
+    .replace(
+        /&/g,
+        "&amp;"
+    )
+    .replace(
+        /</g,
+        "&lt;"
+    )
+    .replace(
+        />/g,
+        "&gt;"
+    )
+    .replace(
+        /"/g,
+        "&quot;"
+    )
+    .replace(
+        /'/g,
+        "&#039;"
+    );
+
+}
+
+
+/* =====================================================
+   A.S.I.S. STATUS
+===================================================== */
 
 console.log(
     "%cA.S.I.S.",
@@ -703,6 +1122,6 @@ console.log(
 
 
 console.log(
-    "%cARCHIVE SURVIVAL INFORMATION SYSTEM",
+    "%cNEWS VIEW SYSTEM",
     "color:#8A949F;font-size:12px"
 );
